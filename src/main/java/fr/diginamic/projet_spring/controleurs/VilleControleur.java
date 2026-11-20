@@ -1,6 +1,6 @@
 package fr.diginamic.projet_spring.controleurs;
 
-import fr.diginamic.projet_spring.entites.Ville;
+import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.VilleService;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/** Expose les routes HTTP des villes et délègue les traitements au service. */
+/** Expose uniquement des VilleDto : les entités JPA restent dans les services et DAO. */
 @RestController
 @RequestMapping("/villes")
 public class VilleControleur {
@@ -33,7 +33,7 @@ public class VilleControleur {
      * @return toutes les villes en base.
      */
     @GetMapping
-    public List<Ville> getVilles() {
+    public List<VilleDto> getVilles() {
         return villeService.extractVilles();
     }
 
@@ -45,19 +45,19 @@ public class VilleControleur {
      * @throws ExceptionMetier si elle est introuvable
      */
     @GetMapping("/{id}")
-    public Ville getVille(@PathVariable int id) throws ExceptionMetier {
+    public VilleDto getVille(@PathVariable int id) throws ExceptionMetier {
         return villeService.extractVille(id);
     }
 
     /**
      * Transmet au service une ville reçue en JSON.
      *
-     * @param ville données JSON validées avant l'appel au service
+     * @param ville DTO JSON validé avant l'appel au service
      * @return la liste après insertion
      * @throws ExceptionMetier si un contrôle métier échoue
      */
     @PostMapping
-    public List<Ville> ajouterVille(@Valid @RequestBody Ville ville) throws ExceptionMetier {
+    public List<VilleDto> ajouterVille(@Valid @RequestBody VilleDto ville) throws ExceptionMetier {
         return villeService.insertVille(ville);
     }
 
@@ -70,7 +70,7 @@ public class VilleControleur {
      * @throws ExceptionMetier si la ville ou ses nouvelles données sont invalides
      */
     @PutMapping("/{id}")
-    public List<Ville> modifierVille(@PathVariable int id, @Valid @RequestBody Ville nouvellesDonnees)
+    public List<VilleDto> modifierVille(@PathVariable int id, @Valid @RequestBody VilleDto nouvellesDonnees)
             throws ExceptionMetier {
         return villeService.modifierVille(id, nouvellesDonnees);
     }
@@ -83,7 +83,7 @@ public class VilleControleur {
      * @throws ExceptionMetier si la ville n'existe pas
      */
     @DeleteMapping("/{id}")
-    public List<Ville> supprimerVille(@PathVariable int id) throws ExceptionMetier {
+    public List<VilleDto> supprimerVille(@PathVariable int id) throws ExceptionMetier {
         return villeService.supprimerVille(id);
     }
 
@@ -95,7 +95,7 @@ public class VilleControleur {
      * @throws ExceptionMetier si la recherche est invalide ou sans résultat
      */
     @GetMapping("/recherche/nom")
-    public List<Ville> rechercherParNom(@RequestParam String nom) throws ExceptionMetier {
+    public List<VilleDto> rechercherParNom(@RequestParam String nom) throws ExceptionMetier {
         return villeService.extractVilles(nom);
     }
 
@@ -107,7 +107,7 @@ public class VilleControleur {
      * @throws ExceptionMetier si aucune ville ne correspond
      */
     @GetMapping("/recherche/population")
-    public List<Ville> rechercherParPopulationMin(@RequestParam int min) throws ExceptionMetier {
+    public List<VilleDto> rechercherParPopulationMin(@RequestParam int min) throws ExceptionMetier {
         return villeService.extractVilles(min);
     }
 
@@ -120,7 +120,7 @@ public class VilleControleur {
      * @throws ExceptionMetier si l'intervalle est invalide ou sans résultat
      */
     @GetMapping("/recherche/population/entre")
-    public List<Ville> rechercherParPopulationEntre(@RequestParam int min, @RequestParam int max)
+    public List<VilleDto> rechercherParPopulationEntre(@RequestParam int min, @RequestParam int max)
             throws ExceptionMetier {
         return villeService.extractVilles(min, max);
     }

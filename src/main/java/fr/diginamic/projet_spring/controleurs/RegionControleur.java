@@ -1,6 +1,6 @@
 package fr.diginamic.projet_spring.controleurs;
 
-import fr.diginamic.projet_spring.entites.Region;
+import fr.diginamic.projet_spring.dto.RegionDto;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.RegionService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public class RegionControleur {
      * @return les régions déjà présentes en base.
      */
     @GetMapping
-    public List<Region> getRegions() {
+    public List<RegionDto> getRegions() {
         return regionService.extractRegions();
     }
 
@@ -39,7 +39,7 @@ public class RegionControleur {
      * @throws ExceptionMetier si la région est absente
      */
     @GetMapping("/{id}")
-    public Region getRegion(@PathVariable int id) throws ExceptionMetier {
+    public RegionDto getRegion(@PathVariable int id) throws ExceptionMetier {
         return regionService.extractRegion(id);
     }
 }

@@ -2,6 +2,7 @@ package fr.diginamic.projet_spring.entites;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,11 +34,11 @@ public class Ville {
 
     // Cette relation reprend la clé étrangère ID_DEPARTEMENT de la table existante.
     @NotNull(message = "Le département de la ville est obligatoire")
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_DEPARTEMENT", nullable = false)
     private Departement departement;
 
-    // JPA et le convertisseur JSON utilisent ce constructeur vide.
+    // JPA utilise ce constructeur vide pour reconstruire la ville depuis la base.
     public Ville() {
     }
 

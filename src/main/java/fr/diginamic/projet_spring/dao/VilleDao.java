@@ -12,9 +12,9 @@ import java.util.Locale;
 @Repository
 public class VilleDao {
 
-    // Charge aussi les liens utiles au JSON, avant la fin de la transaction du service.
+    // Charge le département pour construire le DTO avant la fin de la transaction.
     private static final String SELECTION =
-            "select v from Ville v join fetch v.departement d join fetch d.region ";
+            "select v from Ville v join fetch v.departement d ";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -146,4 +146,31 @@ public class VilleDao {
         entityManager.remove(ville);
         entityManager.flush();
     }
+
+    /**
+     * Trie et limite les résultats directement en base.
+     * @param idDepartement département concerné
+     * @param nombre nombre maximal de villes
+     * @return les villes par population décroissante, puis par id en cas d'égalité
+     */
+    public List<Ville> extractPlusGrandesVilles(int idDepartement, int nombre) {
+        return entityManager.createQuery(SELECTION
+                        + "where d.id = :id order by v.population desc, v.id asc", Ville.class)
+                .setParameter("id", idDepartement).setMaxResults(nombre).getResultList();
+    }
+
+    /**
+     * Filtre les populations dans un seul département.
+     * @param idDepartement département concerné
+     * @param min borne basse exclue
+     * @param max borne haute exclue
+     * @return les villes correspondant aux trois critères
+     */
+    public List<Ville> extractVillesDuDepartement(int idDepartement, int min, int max) {
+        return entityManager.createQuery(SELECTION
+                        + "where d.id = :id and v.population > :min and v.population < :max order by v.id", Ville.class)
+                .setParameter("id", idDepartement).setParameter("min", min).setParameter("max", max)
+                .getResultList();
+    }
+
 }

@@ -1,7 +1,7 @@
 package fr.diginamic.projet_spring.controleurs;
 
-import fr.diginamic.projet_spring.entites.Departement;
-import fr.diginamic.projet_spring.entites.Ville;
+import fr.diginamic.projet_spring.dto.DepartementDto;
+import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.DepartementService;
 import fr.diginamic.projet_spring.services.VilleService;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class DepartementControleur {
      * @return les départements disponibles.
      */
     @GetMapping
-    public List<Departement> getDepartements() {
+    public List<DepartementDto> getDepartements() {
         return departementService.extractDepartements();
     }
 
@@ -48,7 +49,7 @@ public class DepartementControleur {
      * @throws ExceptionMetier si le département est absent
      */
     @GetMapping("/{id}")
-    public Departement getDepartement(@PathVariable int id) throws ExceptionMetier {
+    public DepartementDto getDepartement(@PathVariable int id) throws ExceptionMetier {
         return departementService.extractDepartement(id);
     }
 
@@ -60,19 +61,19 @@ public class DepartementControleur {
      * @throws ExceptionMetier si le département est absent
      */
     @GetMapping("/{id}/villes")
-    public List<Ville> getVillesDuDepartement(@PathVariable int id) throws ExceptionMetier {
+    public List<VilleDto> getVillesDuDepartement(@PathVariable int id) throws ExceptionMetier {
         return villeService.extractVillesDuDepartement(id);
     }
 
     /**
      * Transmet au service un département reçu en JSON.
      *
-     * @param departement données JSON du département et id de sa région
+     * @param departement DTO du département, avec une région facultative
      * @return la liste après insertion
      * @throws ExceptionMetier si un contrôle métier échoue
      */
     @PostMapping
-    public List<Departement> ajouterDepartement(@Valid @RequestBody Departement departement)
+    public List<DepartementDto> ajouterDepartement(@Valid @RequestBody DepartementDto departement)
             throws ExceptionMetier {
         return departementService.insertDepartement(departement);
     }
@@ -86,7 +87,7 @@ public class DepartementControleur {
      * @throws ExceptionMetier si les données ou les références sont invalides
      */
     @PutMapping("/{id}")
-    public List<Departement> modifierDepartement(@PathVariable int id, @Valid @RequestBody Departement departement)
+    public List<DepartementDto> modifierDepartement(@PathVariable int id, @Valid @RequestBody DepartementDto departement)
             throws ExceptionMetier {
         return departementService.modifierDepartement(id, departement);
     }
@@ -99,7 +100,35 @@ public class DepartementControleur {
      * @throws ExceptionMetier si le département est absent ou contient encore des villes
      */
     @DeleteMapping("/{id}")
-    public List<Departement> supprimerDepartement(@PathVariable int id) throws ExceptionMetier {
+    public List<DepartementDto> supprimerDepartement(@PathVariable int id) throws ExceptionMetier {
         return departementService.supprimerDepartement(id);
     }
+
+    /**
+     * Liste les plus grandes villes d'un département.
+     * @param id département recherché
+     * @param n nombre maximal de villes, 10 par défaut
+     * @return les DTO par population décroissante
+     * @throws ExceptionMetier si le nombre est invalide ou le département absent
+     */
+    @GetMapping("/{id}/villes/plus-grandes")
+    public List<VilleDto> getPlusGrandesVilles(@PathVariable int id, @RequestParam(defaultValue = "10") int n)
+            throws ExceptionMetier {
+        return villeService.extractPlusGrandesVilles(id, n);
+    }
+
+    /**
+     * Filtre les villes d'un département entre deux populations.
+     * @param id département recherché
+     * @param min borne basse exclue
+     * @param max borne haute exclue
+     * @return les DTO correspondants
+     * @throws ExceptionMetier si les bornes sont invalides ou le département absent
+     */
+    @GetMapping("/{id}/villes/population")
+    public List<VilleDto> getVillesParPopulation(@PathVariable int id, @RequestParam int min, @RequestParam int max)
+            throws ExceptionMetier {
+        return villeService.extractVillesDuDepartement(id, min, max);
+    }
+
 }

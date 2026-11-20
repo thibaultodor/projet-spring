@@ -1,0 +1,628 @@
+{
+  "meta": {
+    "format": "httpie",
+    "version": "1.0.0",
+    "contentType": "workspace",
+    "schema": "https://raw.githubusercontent.com/httpie/schema/refs/heads/main/versions/1.0.0/schema.json",
+    "docs": "https://httpie.io/docs/desktop/httpie-desktop-import"
+  },
+  "entry": {
+    "name": "Projet Spring — Villes",
+    "icon": {
+      "name": "database",
+      "color": "green"
+    },
+    "collections": [
+      {
+        "name": "01 — CRUD des villes",
+        "icon": {
+          "name": "database",
+          "color": "green"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — Lister toutes les villes [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "02 — Consulter Paris — id 1 [200]",
+            "url": "{{baseUrl}}/villes/1",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "03 — Créer Foix avec un habitant — recopier son id dans villeId [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 1\n}"
+              }
+            }
+          },
+          {
+            "name": "04 — Consulter la ville créée [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "05 — Modifier sa population à neuf habitants [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "PUT",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 9\n}"
+              }
+            }
+          },
+          {
+            "name": "06 — Vérifier la modification [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "07 — Refuser un doublon de Paris [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"paris\",\n  \"population\": 100\n}"
+              }
+            }
+          },
+          {
+            "name": "08 — Refuser un identifiant inconnu en lecture [404]",
+            "url": "{{baseUrl}}/villes/999",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "09 — Supprimer la ville créée [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "10 — Vérifier sa disparition [404]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "11 — Refuser une modification sur un id inconnu [404]",
+            "url": "{{baseUrl}}/villes/999",
+            "method": "PUT",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 1\n}"
+              }
+            }
+          },
+          {
+            "name": "12 — Refuser une suppression sur un id inconnu [404]",
+            "url": "{{baseUrl}}/villes/999",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          }
+        ]
+      },
+      {
+        "name": "02 — Bean Validation",
+        "icon": {
+          "name": "wrench",
+          "color": "green"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — POST — nom nul [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": null,\n  \"population\": 100\n}"
+              }
+            }
+          },
+          {
+            "name": "02 — POST — nom trop court [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100\n}"
+              }
+            }
+          },
+          {
+            "name": "03 — POST — population à zéro [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 0\n}"
+              }
+            }
+          },
+          {
+            "name": "04 — POST — deux erreurs dans la même réponse JSON [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0\n}"
+              }
+            }
+          },
+          {
+            "name": "05 — PUT — nom nul [400]",
+            "url": "{{baseUrl}}/villes/2",
+            "method": "PUT",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": null,\n  \"population\": 100\n}"
+              }
+            }
+          },
+          {
+            "name": "06 — PUT — nom trop court [400]",
+            "url": "{{baseUrl}}/villes/2",
+            "method": "PUT",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100\n}"
+              }
+            }
+          },
+          {
+            "name": "07 — PUT — population à zéro [400]",
+            "url": "{{baseUrl}}/villes/2",
+            "method": "PUT",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"Lyon\",\n  \"population\": 0\n}"
+              }
+            }
+          },
+          {
+            "name": "08 — PUT — deux erreurs dans la même réponse JSON [400]",
+            "url": "{{baseUrl}}/villes/2",
+            "method": "PUT",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "text": {
+                "format": "application/json",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0\n}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "03 — Recherches et exceptions",
+        "icon": {
+          "name": "globe",
+          "color": "green"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — Noms commençant par M — Marseille et Montpellier [200]",
+            "url": "{{baseUrl}}/villes/recherche/nom",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "nom",
+                "value": "M"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "02 — Population supérieure à 520000 — Paris et Marseille [200]",
+            "url": "{{baseUrl}}/villes/recherche/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "min",
+                "value": "520000"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "03 — Population entre 300000 et 870000 — Lyon [200]",
+            "url": "{{baseUrl}}/villes/recherche/population/entre",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "min",
+                "value": "300000"
+              },
+              {
+                "enabled": true,
+                "name": "max",
+                "value": "870000"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "04 — Aucun nom ne commence par Inconnu [404]",
+            "url": "{{baseUrl}}/villes/recherche/nom",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "nom",
+                "value": "Inconnu"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "05 — Aucune population ne dépasse 3000000 [404]",
+            "url": "{{baseUrl}}/villes/recherche/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "min",
+                "value": "3000000"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "06 — Aucune population entre 600000 et 800000 [404]",
+            "url": "{{baseUrl}}/villes/recherche/population/entre",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "min",
+                "value": "600000"
+              },
+              {
+                "enabled": true,
+                "name": "max",
+                "value": "800000"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          },
+          {
+            "name": "07 — Refuser des bornes inversées [400]",
+            "url": "{{baseUrl}}/villes/recherche/population/entre",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "enabled": true,
+                "name": "min",
+                "value": "100"
+              },
+              {
+                "enabled": true,
+                "name": "max",
+                "value": "10"
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none"
+            }
+          }
+        ]
+      }
+    ],
+    "drafts": [],
+    "environments": [
+      {
+        "isDefault": true,
+        "isLocalOnly": false,
+        "variables": [
+          {
+            "name": "baseUrl",
+            "value": "http://localhost:8080",
+            "isSecret": false
+          },
+          {
+            "name": "villeId",
+            "value": "5",
+            "isSecret": false
+          }
+        ]
+      }
+    ]
+  }
+}

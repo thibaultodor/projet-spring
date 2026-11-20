@@ -1,10 +1,11 @@
 package fr.diginamic.projet_spring.services;
 
-import fr.diginamic.projet_spring.dao.DepartementDao;
 import fr.diginamic.projet_spring.dao.VilleDao;
+import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.entites.Departement;
 import fr.diginamic.projet_spring.entites.Ville;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
+import fr.diginamic.projet_spring.mappers.DtoMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.http.HttpStatus;
@@ -15,53 +16,46 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Porte les contrôles métier des villes, sans accéder directement à EntityManager. */
+/** Applique les règles métier et convertit les entités en DTO pendant la transaction. */
 @Service
 @Transactional(readOnly = true)
 public class VilleService {
 
     private final VilleDao villeDao;
-    private final DepartementDao departementDao;
+    private final DepartementService departementService;
     private final Validator validator;
+    private final DtoMapper dtoMapper;
 
-    public VilleService(VilleDao villeDao, DepartementDao departementDao, Validator validator) {
+    public VilleService(VilleDao villeDao, DepartementService departementService,
+                         Validator validator, DtoMapper dtoMapper) {
         this.villeDao = villeDao;
-        this.departementDao = departementDao;
+        this.departementService = departementService;
         this.validator = validator;
+        this.dtoMapper = dtoMapper;
     }
 
-    /**
-     * Récupère toutes les villes enregistrées.
-     *
-     * @return les villes présentes en base.
-     */
-    public List<Ville> extractVilles() {
-        return villeDao.extractVilles();
+    /** @return les villes de l'API, sans relations JPA imbriquées. */
+    public List<VilleDto> extractVilles() {
+        return convertir(villeDao.extractVilles());
     }
 
     /**
      * Recherche une ville par son identifiant.
-     *
      * @param idVille identifiant recherché
-     * @return la ville existante
-     * @throws ExceptionMetier si la ville est introuvable
+     * @return le DTO de la ville
+     * @throws ExceptionMetier si elle est absente
      */
-    public Ville extractVille(int idVille) throws ExceptionMetier {
-        Ville ville = villeDao.extractVille(idVille);
-        if (ville == null) {
-            throw new ExceptionMetier("Ville introuvable", HttpStatus.NOT_FOUND);
-        }
-        return ville;
+    public VilleDto extractVille(int idVille) throws ExceptionMetier {
+        return dtoMapper.versVilleDto(trouverEntite(idVille));
     }
 
     /**
-     * Recherche les villes à partir du début de leur nom.
-     *
-     * @param prefixe début du nom recherché
-     * @return les villes dont le nom commence par ce texte
-     * @throws ExceptionMetier si le texte est vide ou si aucune ville ne correspond
+     * Recherche les villes par début du nom.
+     * @param prefixe texte recherché
+     * @return les DTO correspondants
+     * @throws ExceptionMetier si le texte est vide ou sans résultat
      */
-    public List<Ville> extractVilles(String prefixe) throws ExceptionMetier {
+    public List<VilleDto> extractVilles(String prefixe) throws ExceptionMetier {
         if (prefixe == null || prefixe.isBlank()) {
             throw new ExceptionMetier("Le début du nom est obligatoire");
         }
@@ -70,140 +64,166 @@ public class VilleService {
             throw new ExceptionMetier("Aucune ville dont le nom commence par " + prefixe + " n’a été trouvée",
                     HttpStatus.NOT_FOUND);
         }
-        return villes;
+        return convertir(villes);
     }
 
     /**
-     * Recherche les villes au-dessus d'une population donnée.
-     *
-     * @param min population minimale exclue
-     * @return les villes dont la population dépasse min
+     * Recherche les populations au-dessus d'un minimum.
+     * @param min borne exclue
+     * @return les DTO correspondants
      * @throws ExceptionMetier si aucune ville ne correspond
      */
-    public List<Ville> extractVilles(int min) throws ExceptionMetier {
+    public List<VilleDto> extractVilles(int min) throws ExceptionMetier {
         List<Ville> villes = villeDao.extractVilles(min);
         if (villes.isEmpty()) {
             throw new ExceptionMetier("Aucune ville n’a une population supérieure à " + min,
                     HttpStatus.NOT_FOUND);
         }
-        return villes;
+        return convertir(villes);
     }
 
     /**
-     * Recherche les villes strictement entre deux populations.
-     *
-     * @param min borne basse exclue
-     * @param max borne haute exclue
-     * @return les villes dont la population est strictement comprise entre les bornes
-     * @throws ExceptionMetier si l'intervalle est invalide ou sans résultat
+     * Recherche les populations entre deux bornes exclues.
+     * @param min borne basse
+     * @param max borne haute
+     * @return les DTO correspondants
+     * @throws ExceptionMetier si l'intervalle est invalide ou vide
      */
-    public List<Ville> extractVilles(int min, int max) throws ExceptionMetier {
-        if (min >= max) {
-            throw new ExceptionMetier("La borne min doit être inférieure à la borne max");
-        }
+    public List<VilleDto> extractVilles(int min, int max) throws ExceptionMetier {
+        verifierBornes(min, max);
         List<Ville> villes = villeDao.extractVilles(min, max);
         if (villes.isEmpty()) {
             throw new ExceptionMetier("Aucune ville n’a une population comprise entre " + min + " et " + max,
                     HttpStatus.NOT_FOUND);
         }
-        return villes;
+        return convertir(villes);
     }
 
     /**
-     * Récupère les villes rattachées à un département.
-     *
+     * Liste les villes d'un département existant.
      * @param idDepartement département recherché
-     * @return ses villes, ou une liste vide s'il n'en contient aucune
-     * @throws ExceptionMetier si le département n'existe pas
+     * @return les DTO, éventuellement dans une liste vide
+     * @throws ExceptionMetier si le département est absent
      */
-    public List<Ville> extractVillesDuDepartement(int idDepartement) throws ExceptionMetier {
-        retrouverDepartement(idDepartement);
-        return villeDao.extractVillesDuDepartement(idDepartement);
+    public List<VilleDto> extractVillesDuDepartement(int idDepartement) throws ExceptionMetier {
+        departementService.extractDepartement(idDepartement);
+        return convertir(villeDao.extractVillesDuDepartement(idDepartement));
     }
 
     /**
-     * Enregistre une nouvelle ville.
-     *
-     * @param ville nouvelle ville
-     * @return la liste après insertion
-     * @throws ExceptionMetier si les données, le département ou le nom sont invalides
+     * Limite les résultats en base et conserve un ordre déterministe en cas d'égalité.
+     * @param idDepartement département recherché
+     * @param nombre nombre maximal de villes, supérieur ou égal à 1
+     * @return les DTO par population décroissante
+     * @throws ExceptionMetier si le nombre est invalide ou le département absent
      */
-    // rollbackFor annule aussi l'écriture si notre exception métier est levée.
+    public List<VilleDto> extractPlusGrandesVilles(int idDepartement, int nombre) throws ExceptionMetier {
+        if (nombre < 1) {
+            throw new ExceptionMetier("Le nombre de villes doit être supérieur ou égal à 1");
+        }
+        departementService.extractDepartement(idDepartement);
+        return convertir(villeDao.extractPlusGrandesVilles(idDepartement, nombre));
+    }
+
+    /**
+     * Filtre les villes d'un seul département par population.
+     * @param idDepartement département recherché
+     * @param min borne basse exclue
+     * @param max borne haute exclue
+     * @return les DTO, éventuellement dans une liste vide
+     * @throws ExceptionMetier si les bornes sont invalides ou le département absent
+     */
+    public List<VilleDto> extractVillesDuDepartement(int idDepartement, int min, int max) throws ExceptionMetier {
+        verifierBornes(min, max);
+        departementService.extractDepartement(idDepartement);
+        return convertir(villeDao.extractVillesDuDepartement(idDepartement, min, max));
+    }
+
+    /**
+     * Vérifie le DTO, résout son département puis crée une nouvelle entité.
+     * @param donnees ville à créer
+     * @return les villes après insertion
+     * @throws ExceptionMetier si un contrôle échoue
+     */
     @Transactional(rollbackFor = ExceptionMetier.class)
-    public List<Ville> insertVille(Ville ville) throws ExceptionMetier {
-        verifierDonnees(ville);
-        Departement departement = retrouverDepartement(ville.getDepartement().getId());
-        verifierNomDisponible(ville.getNom(), departement.getId(), 0);
-        // Ignore l'id envoyé par le client : la base attribue celui de la nouvelle ligne.
-        ville.setId(0);
-        ville.setDepartement(departement);
+    public List<VilleDto> insertVille(VilleDto donnees) throws ExceptionMetier {
+        verifierDonnees(donnees);
+        // La création éventuelle du département et celle de la ville partagent la transaction.
+        Departement departement = departementService.resoudreDepartement(
+                donnees.getIdDepartement(), donnees.getCodeDepartement());
+        verifierNomDisponible(donnees.getNom(), departement.getId(), 0);
+        Ville ville = new Ville(donnees.getNom(), donnees.getPopulation(), departement);
         villeDao.insertVille(ville);
-        return villeDao.extractVilles();
+        return extractVilles();
     }
 
     /**
-     * Met à jour une ville en conservant son identifiant.
-     *
-     * @param idVille identifiant à conserver
-     * @param villeModifiee nouvelles données
-     * @return la liste après modification
-     * @throws ExceptionMetier si la ville, le département ou les données sont invalides
+     * Modifie l'entité avec les valeurs du DTO, sans changer son identifiant.
+     * @param idVille identifiant de la ville existante
+     * @param donnees nouvelles valeurs
+     * @return les villes après modification
+     * @throws ExceptionMetier si la ville ou ses nouvelles données sont invalides
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
-    public List<Ville> modifierVille(int idVille, Ville villeModifiee) throws ExceptionMetier {
-        Ville existante = extractVille(idVille);
-        verifierDonnees(villeModifiee);
-        Departement departement = retrouverDepartement(villeModifiee.getDepartement().getId());
-        verifierNomDisponible(villeModifiee.getNom(), departement.getId(), idVille);
-        existante.setNom(villeModifiee.getNom());
-        existante.setPopulation(villeModifiee.getPopulation());
+    public List<VilleDto> modifierVille(int idVille, VilleDto donnees) throws ExceptionMetier {
+        Ville existante = trouverEntite(idVille);
+        verifierDonnees(donnees);
+        Departement departement = departementService.resoudreDepartement(
+                donnees.getIdDepartement(), donnees.getCodeDepartement());
+        verifierNomDisponible(donnees.getNom(), departement.getId(), idVille);
+        existante.setNom(donnees.getNom());
+        existante.setPopulation(donnees.getPopulation());
         existante.setDepartement(departement);
         villeDao.modifierVille(existante);
-        return villeDao.extractVilles();
+        return extractVilles();
     }
 
     /**
      * Supprime une ville existante.
-     *
      * @param idVille identifiant à supprimer
      * @return les villes restantes
-     * @throws ExceptionMetier si la ville n'existe pas
+     * @throws ExceptionMetier si la ville est absente
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
-    public List<Ville> supprimerVille(int idVille) throws ExceptionMetier {
-        Ville ville = extractVille(idVille);
-        villeDao.supprimerVille(ville);
-        return villeDao.extractVilles();
+    public List<VilleDto> supprimerVille(int idVille) throws ExceptionMetier {
+        villeDao.supprimerVille(trouverEntite(idVille));
+        return extractVilles();
     }
 
-    private void verifierDonnees(Ville ville) throws ExceptionMetier {
+    private List<VilleDto> convertir(List<Ville> villes) {
+        // Cette copie termine l'accès aux relations avant que le contrôleur renvoie du JSON.
+        return villes.stream().map(dtoMapper::versVilleDto).toList();
+    }
+
+    private Ville trouverEntite(int id) throws ExceptionMetier {
+        Ville ville = villeDao.extractVille(id);
         if (ville == null) {
+            throw new ExceptionMetier("Ville introuvable", HttpStatus.NOT_FOUND);
+        }
+        return ville;
+    }
+
+    private void verifierDonnees(VilleDto donnees) throws ExceptionMetier {
+        if (donnees == null) {
             throw new ExceptionMetier("La ville est obligatoire");
         }
-        if (ville.getNom() != null) {
-            ville.setNom(ville.getNom().trim());
+        if (donnees.getNom() != null) {
+            donnees.setNom(donnees.getNom().trim());
         }
-        // Réutilise Bean Validation pour protéger aussi les appels directs au service.
-        Set<ConstraintViolation<Ville>> erreurs = validator.validate(ville);
+        Set<ConstraintViolation<VilleDto>> erreurs = validator.validate(donnees);
         if (!erreurs.isEmpty()) {
             throw new ExceptionMetier(erreurs.stream().map(ConstraintViolation::getMessage)
                     .sorted().collect(Collectors.joining(" ; ")));
         }
     }
 
-    private Departement retrouverDepartement(int id) throws ExceptionMetier {
-        if (id <= 0) {
-            throw new ExceptionMetier("Le département doit avoir un identifiant valide");
+    private void verifierBornes(int min, int max) throws ExceptionMetier {
+        if (min >= max) {
+            throw new ExceptionMetier("La borne min doit être inférieure à la borne max");
         }
-        Departement departement = departementDao.extractDepartement(id);
-        if (departement == null) {
-            throw new ExceptionMetier("Département introuvable", HttpStatus.NOT_FOUND);
-        }
-        return departement;
     }
 
     private void verifierNomDisponible(String nom, int idDepartement, int idExclu) throws ExceptionMetier {
-        // Deux départements peuvent avoir des villes homonymes, mais pas un même département.
         if (villeDao.existeParNomEtDepartement(nom, idDepartement, idExclu)) {
             throw new ExceptionMetier("La ville \"" + nom + "\" existe déjà dans ce département");
         }

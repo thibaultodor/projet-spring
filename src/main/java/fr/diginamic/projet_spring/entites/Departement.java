@@ -2,16 +2,21 @@ package fr.diginamic.projet_spring.entites;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/** Département rattaché à une région, conformément aux tables du recensement. */
+import java.util.ArrayList;
+import java.util.List;
+
+/** Département associé à ses villes ; sa région peut rester non renseignée. */
 @Entity
 @Table(name = "departement")
 public class Departement {
@@ -30,11 +35,15 @@ public class Departement {
     @Column(name = "NOM", length = 100)
     private String nom;
 
-    // Le JSON fournit l'id de la région. Le service retrouve ensuite la région en base.
-    @NotNull(message = "La région du département est obligatoire")
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "ID_REGION", nullable = false)
+    // Un département créé à partir de son seul code peut ne pas encore avoir de région.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_REGION")
     private Region region;
+
+    // mappedBy indique que Ville.departement porte la clé étrangère.
+    // Aucune suppression en cascade : le service protège les départements encore utilisés.
+    @OneToMany(mappedBy = "departement")
+    private List<Ville> villes = new ArrayList<>();
 
     public Departement() {
     }
@@ -51,6 +60,7 @@ public class Departement {
     public void setCode(String code) { this.code = code; }
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
+    public List<Ville> getVilles() { return villes; }
     public Region getRegion() { return region; }
     public void setRegion(Region region) { this.region = region; }
 }

@@ -14,7 +14,7 @@
     },
     "collections": [
       {
-        "name": "01 — CRUD des villes en base",
+        "name": "01 — Villes DTO",
         "icon": {
           "name": "database",
           "color": "green"
@@ -103,7 +103,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -181,7 +181,7 @@
             }
           },
           {
-            "name": "06 — Modifier sa population — la réponse contient la liste mise à jour [200]",
+            "name": "06 — Modifier la population avec le code du département [200]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "PUT",
             "headers": [
@@ -202,7 +202,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 9,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 9,\n  \"codeDepartement\": \"{{codeDepartement}}\"\n}",
                 "format": "application/json"
               },
               "form": {
@@ -266,7 +266,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -388,7 +388,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -433,7 +433,7 @@
         ]
       },
       {
-        "name": "02 — CRUD des départements",
+        "name": "02 — Départements DTO",
         "icon": {
           "name": "database",
           "color": "green"
@@ -580,7 +580,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"code\": \"ZTP\",\n  \"nom\": \"Département TP Spring\",\n  \"region\": {\n    \"id\": {{regionId}}\n  }\n}",
+                "value": "{\n  \"code\": \"ZTP\",\n  \"nom\": \"Département TP Spring\",\n  \"idRegion\": {{regionId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -644,7 +644,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"code\": \"ZTQ\",\n  \"nom\": \"Département TP modifié\",\n  \"region\": {\n    \"id\": {{regionId}}\n  }\n}",
+                "value": "{\n  \"code\": \"ZTQ\",\n  \"nom\": \"Département TP modifié\",\n  \"idRegion\": {{regionId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -679,7 +679,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"code\": \"ZTQ\",\n  \"nom\": \"Département TP Spring\",\n  \"region\": {\n    \"id\": {{regionId}}\n  }\n}",
+                "value": "{\n  \"code\": \"ZTQ\",\n  \"nom\": \"Département TP Spring\",\n  \"idRegion\": {{regionId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -753,7 +753,304 @@
         ]
       },
       {
-        "name": "03 — Contrôles et Bean Validation",
+        "name": "03 — Département créé par code",
+        "icon": {
+          "name": "database",
+          "color": "green"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — Créer une ville avec un nouveau code — département créé automatiquement [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"nom\": \"Ville TP09 Auto\",\n  \"population\": 1,\n  \"codeDepartement\": \"{{codeDepartementAuto}}\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 — Retrouver la ville — copier id dans villeAutoId et idDepartement dans departementAutoId [200]",
+            "url": "{{baseUrl}}/villes/recherche/nom",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "nom",
+                "value": "Ville TP09 Auto",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 — Consulter le département créé sans région [200]",
+            "url": "{{baseUrl}}/departements/{{departementAutoId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 — Modifier la ville en utilisant le même code [200]",
+            "url": "{{baseUrl}}/villes/{{villeAutoId}}",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"nom\": \"Ville TP09 Auto\",\n  \"population\": 9,\n  \"codeDepartement\": \"{{codeDepartementAuto}}\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 — Classer les villes du département créé [200]",
+            "url": "{{baseUrl}}/departements/{{departementAutoId}}/villes/plus-grandes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "n",
+                "value": "3",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 — Refuser la suppression du département encore lié à la ville [409]",
+            "url": "{{baseUrl}}/departements/{{departementAutoId}}",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "07 — Supprimer uniquement la ville de ce scénario [200]",
+            "url": "{{baseUrl}}/villes/{{villeAutoId}}",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "08 — Supprimer ensuite le département de ce scénario [200]",
+            "url": "{{baseUrl}}/departements/{{departementAutoId}}",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "09 — Vérifier sa disparition [404]",
+            "url": "{{baseUrl}}/departements/{{departementAutoId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "04 — Contrôles des DTO",
         "icon": {
           "name": "wrench",
           "color": "green"
@@ -784,7 +1081,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": null,\n  \"population\": 100,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": null,\n  \"population\": 100,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -819,7 +1116,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -854,7 +1151,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 0,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 0,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -889,7 +1186,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -924,7 +1221,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": null,\n  \"population\": 100,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": null,\n  \"population\": 100,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -959,7 +1256,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -994,7 +1291,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 0,\n  \"departement\": {\n    \"id\": {{departementId}}\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 0,\n  \"idDepartement\": {{departementId}}\n}",
                 "format": "application/json"
               },
               "form": {
@@ -1008,7 +1305,7 @@
             }
           },
           {
-            "name": "08 — POST ville — département obligatoire [400]",
+            "name": "08 — Refuser une ville sans id ni code de département [400]",
             "url": "{{baseUrl}}/villes",
             "method": "POST",
             "headers": [
@@ -1064,7 +1361,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"departement\": {\n    \"id\": 2147483647\n  }\n}",
+                "value": "{\n  \"nom\": \"Ville TP Spring\",\n  \"population\": 1,\n  \"idDepartement\": 2147483647\n}",
                 "format": "application/json"
               },
               "form": {
@@ -1078,7 +1375,7 @@
             }
           },
           {
-            "name": "10 — POST département — région obligatoire [400]",
+            "name": "10 — Refuser un département sans code [400]",
             "url": "{{baseUrl}}/departements",
             "method": "POST",
             "headers": [
@@ -1099,7 +1396,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"code\": \"ZTP\",\n  \"nom\": \"Département TP Spring\"\n}",
+                "value": "{\n  \"nom\": \"Département TP Spring\"\n}",
                 "format": "application/json"
               },
               "form": {
@@ -1134,7 +1431,42 @@
                 "name": ""
               },
               "text": {
-                "value": "{\n  \"code\": \"ZTP\",\n  \"nom\": \"Département TP Spring\",\n  \"region\": {\n    \"id\": 2147483647\n  }\n}",
+                "value": "{\n  \"code\": \"ZTP\",\n  \"nom\": \"Département TP Spring\",\n  \"idRegion\": 2147483647\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "12 — Refuser un id et un code de département incohérents [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"nom\": \"Ville TP09 incohérente\",\n  \"population\": 1,\n  \"idDepartement\": {{departementId}},\n  \"codeDepartement\": \"ZIV\"\n}",
                 "format": "application/json"
               },
               "form": {
@@ -1150,7 +1482,7 @@
         ]
       },
       {
-        "name": "04 — Recherches en base et exceptions",
+        "name": "05 — Recherches et classements",
         "icon": {
           "name": "globe",
           "color": "green"
@@ -1418,6 +1750,231 @@
                 "variables": ""
               }
             }
+          },
+          {
+            "name": "08 — Les cinq plus grandes villes du département choisi [200]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/plus-grandes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "n",
+                "value": "5",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "09 — Les villes du département entre 20000 et 100000 habitants — bornes exclues [200]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "20000",
+                "enabled": true
+              },
+              {
+                "name": "max",
+                "value": "100000",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "10 — Refuser un nombre de villes égal à zéro [400]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/plus-grandes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "n",
+                "value": "0",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "11 — Refuser les bornes inversées dans un département [400]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "100",
+                "enabled": true
+              },
+              {
+                "name": "max",
+                "value": "10",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "12 — Refuser un département inconnu pour le classement [404]",
+            "url": "{{baseUrl}}/departements/2147483647/villes/plus-grandes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "n",
+                "value": "3",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "13 — Refuser un département inconnu pour le filtre [404]",
+            "url": "{{baseUrl}}/departements/2147483647/villes/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "1",
+                "enabled": true
+              },
+              {
+                "name": "max",
+                "value": "100",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
           }
         ]
       }
@@ -1451,6 +2008,26 @@
           },
           {
             "name": "departementTestId",
+            "value": "0",
+            "isSecret": false
+          },
+          {
+            "name": "codeDepartement",
+            "value": "34",
+            "isSecret": false
+          },
+          {
+            "name": "codeDepartementAuto",
+            "value": "Z09",
+            "isSecret": false
+          },
+          {
+            "name": "villeAutoId",
+            "value": "0",
+            "isSecret": false
+          },
+          {
+            "name": "departementAutoId",
             "value": "0",
             "isSecret": false
           }

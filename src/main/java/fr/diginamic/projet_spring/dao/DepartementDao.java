@@ -22,7 +22,7 @@ public class DepartementDao {
     public List<Departement> extractDepartements() {
         // join fetch charge la relation dans la même requête pour éviter une requête par département.
         return entityManager.createQuery(
-                "select d from Departement d join fetch d.region order by d.id", Departement.class).getResultList();
+                "select d from Departement d left join fetch d.region order by d.id", Departement.class).getResultList();
     }
 
     /**
@@ -77,4 +77,18 @@ public class DepartementDao {
         entityManager.remove(departement);
         entityManager.flush();
     }
+
+    /**
+     * Recherche un code sans distinguer les majuscules.
+     * @param code code normalisé à rechercher
+     * @return le département, ou null s'il n'existe pas
+     */
+    public Departement extractParCode(String code) {
+        List<Departement> resultats = entityManager.createQuery(
+                        "select d from Departement d left join fetch d.region where upper(d.code) = :code",
+                        Departement.class)
+                .setParameter("code", code).getResultList();
+        return resultats.isEmpty() ? null : resultats.getFirst();
+    }
+
 }

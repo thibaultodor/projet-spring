@@ -3,14 +3,15 @@
     "format": "httpie",
     "version": "1.0.0",
     "contentType": "workspace",
-    "schema": "https://raw.githubusercontent.com/httpie/schema/refs/heads/main/versions/1.0.0/schema.json",
-    "docs": "https://httpie.io/docs/desktop/httpie-desktop-import"
+    "schema": "https://schema.httpie.io/1.0.0.json",
+    "docs": "https://httpie.io/r/help/export-from-httpie",
+    "source": "HTTPie Desktop 2025.2.0"
   },
   "entry": {
-    "name": "Projet Spring — Villes",
+    "name": "TP Spring",
     "icon": {
-      "name": "database",
-      "color": "green"
+      "color": "gray",
+      "name": "default"
     },
     "collections": [
       {
@@ -34,7 +35,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -48,7 +64,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -57,9 +88,9 @@
             "method": "POST",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -69,9 +100,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 1\n}"
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 1\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -86,7 +128,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -95,9 +152,9 @@
             "method": "PUT",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -107,9 +164,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 9\n}"
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 9\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -124,7 +192,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -133,9 +216,9 @@
             "method": "POST",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -145,9 +228,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"paris\",\n  \"population\": 100\n}"
+                "value": "{\n  \"nom\": \"paris\",\n  \"population\": 100\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -162,7 +256,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -176,7 +285,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -190,7 +314,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -199,9 +338,9 @@
             "method": "PUT",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -211,9 +350,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 1\n}"
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 1\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -228,7 +378,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           }
         ]
@@ -249,9 +414,9 @@
             "method": "POST",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -261,9 +426,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": null,\n  \"population\": 100\n}"
+                "value": "{\n  \"nom\": null,\n  \"population\": 100\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -273,9 +449,9 @@
             "method": "POST",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -285,9 +461,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100\n}"
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -297,9 +484,9 @@
             "method": "POST",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -309,9 +496,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 0\n}"
+                "value": "{\n  \"nom\": \"Foix\",\n  \"population\": 0\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -321,9 +519,9 @@
             "method": "POST",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -333,9 +531,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0\n}"
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -345,9 +554,9 @@
             "method": "PUT",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -357,9 +566,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": null,\n  \"population\": 100\n}"
+                "value": "{\n  \"nom\": null,\n  \"population\": 100\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -369,9 +589,9 @@
             "method": "PUT",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -381,9 +601,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100\n}"
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 100\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -393,9 +624,9 @@
             "method": "PUT",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -405,9 +636,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"Lyon\",\n  \"population\": 0\n}"
+                "value": "{\n  \"nom\": \"Lyon\",\n  \"population\": 0\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           },
@@ -417,9 +659,9 @@
             "method": "PUT",
             "headers": [
               {
-                "enabled": true,
                 "name": "Content-Type",
-                "value": "application/json"
+                "value": "application/json",
+                "enabled": true
               }
             ],
             "queryParams": [],
@@ -429,9 +671,20 @@
             },
             "body": {
               "type": "text",
+              "file": {
+                "name": ""
+              },
               "text": {
-                "format": "application/json",
-                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0\n}"
+                "value": "{\n  \"nom\": \"A\",\n  \"population\": 0\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
               }
             }
           }
@@ -454,9 +707,9 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "nom",
-                "value": "M"
+                "value": "M",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -464,7 +717,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -474,9 +742,9 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "min",
-                "value": "520000"
+                "value": "520000",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -484,7 +752,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -494,14 +777,14 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "min",
-                "value": "300000"
+                "value": "300000",
+                "enabled": true
               },
               {
-                "enabled": true,
                 "name": "max",
-                "value": "870000"
+                "value": "870000",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -509,7 +792,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -519,9 +817,9 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "nom",
-                "value": "Inconnu"
+                "value": "Inconnu",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -529,7 +827,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -539,9 +852,9 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "min",
-                "value": "3000000"
+                "value": "3000000",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -549,7 +862,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -559,14 +887,14 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "min",
-                "value": "600000"
+                "value": "600000",
+                "enabled": true
               },
               {
-                "enabled": true,
                 "name": "max",
-                "value": "800000"
+                "value": "800000",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -574,7 +902,22 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           },
           {
@@ -584,14 +927,14 @@
             "headers": [],
             "queryParams": [
               {
-                "enabled": true,
                 "name": "min",
-                "value": "100"
+                "value": "100",
+                "enabled": true
               },
               {
-                "enabled": true,
                 "name": "max",
-                "value": "10"
+                "value": "10",
+                "enabled": true
               }
             ],
             "pathParams": [],
@@ -599,15 +942,31 @@
               "type": "inherited"
             },
             "body": {
-              "type": "none"
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
             }
           }
         ]
       }
     ],
-    "drafts": [],
     "environments": [
       {
+        "name": "Defaults",
+        "color": "gray",
         "isDefault": true,
         "isLocalOnly": false,
         "variables": [
@@ -623,6 +982,7 @@
           }
         ]
       }
-    ]
+    ],
+    "drafts": []
   }
 }

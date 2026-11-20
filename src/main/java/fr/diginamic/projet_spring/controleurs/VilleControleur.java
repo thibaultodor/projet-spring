@@ -3,6 +3,7 @@ package fr.diginamic.projet_spring.controleurs;
 import fr.diginamic.projet_spring.entites.Ville;
 import fr.diginamic.projet_spring.exceptions.VilleException;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,11 +56,9 @@ public class VilleControleur {
     }
 
     // @RequestBody transforme le JSON reçu en objet Ville.
+    // @Valid vérifie ses contraintes avant d'exécuter la méthode.
     @PostMapping
-    public ResponseEntity<String> ajouterVille(@RequestBody Ville ville) throws VilleException {
-        // Vérifie les données avant de modifier la liste ou le compteur.
-        verifierVille(ville);
-
+    public ResponseEntity<String> ajouterVille(@Valid @RequestBody Ville ville) throws VilleException {
         // Refuse un nom déjà présent, même si les majuscules changent.
         for (Ville villeExistante : villes) {
             if (villeExistante.getNom().equalsIgnoreCase(ville.getNom())) {
@@ -75,12 +74,12 @@ public class VilleControleur {
     }
 
     // Modifie la ville désignée par l'id de l'URL avec les données JSON reçues.
+    // @Valid applique les mêmes contraintes que pour l'ajout.
     @PutMapping("/{id}")
-    public ResponseEntity<String> modifierVille(@PathVariable int id, @RequestBody Ville nouvellesDonnees)
+    public ResponseEntity<String> modifierVille(@PathVariable int id, @Valid @RequestBody Ville nouvellesDonnees)
             throws VilleException {
-        // Recherche la ville à modifier avant de vérifier les nouvelles données.
+        // Retrouve la ville à modifier une fois les données validées.
         Ville ville = trouverVille(id);
-        verifierVille(nouvellesDonnees);
 
         // Vérifie les doublons en excluant la ville en cours de modification.
         for (Ville villeExistante : villes) {
@@ -164,28 +163,6 @@ public class VilleControleur {
                     HttpStatus.NOT_FOUND);
         }
         return resultats;
-    }
-
-    // Applique les mêmes règles lors d'un ajout et d'une modification.
-    private void verifierVille(Ville ville) throws VilleException {
-        if (ville.getPopulation() < 10) {
-            throw new VilleException("La ville doit avoir au moins 10 habitants");
-        }
-
-        // Compte les lettres, y compris les accents. Les chiffres et les espaces ne comptent pas.
-        int nombreLettres = 0;
-        String nom = ville.getNom();
-        if (nom != null) {
-            for (int index = 0; index < nom.length(); index++) {
-                if (Character.isLetter(nom.charAt(index))) {
-                    nombreLettres++;
-                }
-            }
-        }
-
-        if (nombreLettres < 2) {
-            throw new VilleException("La ville doit avoir un nom contenant au moins 2 lettres");
-        }
     }
 
     private Ville trouverVille(int id) throws VilleException {

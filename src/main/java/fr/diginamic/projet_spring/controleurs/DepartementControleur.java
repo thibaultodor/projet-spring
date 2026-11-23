@@ -4,6 +4,7 @@ import fr.diginamic.projet_spring.dto.DepartementDto;
 import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.DepartementService;
+import fr.diginamic.projet_spring.services.ExportService;
 import fr.diginamic.projet_spring.services.VilleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +15,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,9 +40,13 @@ public class DepartementControleur {
     private final DepartementService departementService;
     private final VilleService villeService;
 
-    public DepartementControleur(DepartementService departementService, VilleService villeService) {
+    private final ExportService exportService;
+
+    public DepartementControleur(DepartementService departementService, VilleService villeService,
+                                 ExportService exportService) {
         this.departementService = departementService;
         this.villeService = villeService;
+        this.exportService = exportService;
     }
 
     /**
@@ -239,4 +248,30 @@ public class DepartementControleur {
         return villeService.extractVillesDuDepartement(id, min, max);
     }
 
+
+    /**
+     * Télécharge un PDF à partir du code départemental, et non de son identifiant en base.
+     * @param code code du département
+     * @return la fiche PDF avec les villes et leurs populations
+     * @throws ExceptionMetier si le département est introuvable ou si le PDF ne peut pas être créé
+     */
+    @Operation(summary = "Exporte un département et ses villes au format PDF")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Fichier PDF à télécharger",
+                content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "404", description = "Département introuvable",
+                content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "500", description = "La génération du PDF a échoué",
+                content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping(value = "/{code}/export/pdf", produces = "application/pdf")
+    public ResponseEntity<byte[]> exporterPdf(
+            @Parameter(description = "Code du département, différent de son identifiant en base", example = "34")
+            @PathVariable String code) throws ExceptionMetier {
+        byte[] pdf = exportService.exporterDepartementPdf(code);
+        String codeFichier = code.toUpperCase(java.util.Locale.ROOT).replaceAll("[^A-Z0-9]", "_");
+        String fichier = ContentDisposition.attachment().filename("departement-" + codeFichier + ".pdf").build().toString();
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, fichier).body(pdf);
+    }
 }

@@ -2530,6 +2530,204 @@
             }
           }
         ]
+      },
+      {
+        "name": "08 — Exports CSV et PDF",
+        "icon": {
+          "name": "default",
+          "color": "green"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — Télécharger les villes au-dessus de populationMin en CSV [200]",
+            "url": "{{baseUrl}}/villes/export/csv",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "{{populationMin}}",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 — CSV sans résultat — en-tête conservé [200]",
+            "url": "{{baseUrl}}/villes/export/csv",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "2147483647",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 — Minimum absent dans le CSV [400]",
+            "url": "{{baseUrl}}/villes/export/csv",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 — Télécharger le PDF du département par son CODE [200]",
+            "url": "{{baseUrl}}/departements/{{codeDepartement}}/export/pdf",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 — Télécharger le PDF de Corse-du-Sud, code 2A [200]",
+            "url": "{{baseUrl}}/departements/2A/export/pdf",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 — Département inconnu pour le PDF [404]",
+            "url": "{{baseUrl}}/departements/ZZ/export/pdf",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
       }
     ],
     "environments": [
@@ -2592,6 +2790,11 @@
           {
             "name": "taillePage",
             "value": "20",
+            "isSecret": false
+          },
+          {
+            "name": "populationMin",
+            "value": "100000",
             "isSecret": false
           }
         ]

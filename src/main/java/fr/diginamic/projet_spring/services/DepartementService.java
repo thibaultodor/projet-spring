@@ -4,17 +4,26 @@ import fr.diginamic.projet_spring.repositories.DepartementRepository;
 import fr.diginamic.projet_spring.dao.RegionDao;
 import fr.diginamic.projet_spring.repositories.VilleRepository;
 import fr.diginamic.projet_spring.dto.DepartementDto;
+import fr.diginamic.projet_spring.dto.DepartementApiDto;
 import fr.diginamic.projet_spring.entites.Departement;
 import fr.diginamic.projet_spring.entites.Region;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.mappers.DtoMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,19 +33,27 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class DepartementService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DepartementService.class);
+    private static final String URL_DEPARTEMENTS = "https://geo.api.gouv.fr/departements";
+
     private final DepartementRepository departementRepository;
     private final RegionDao regionDao;
     private final VilleRepository villeRepository;
     private final Validator validator;
     private final DtoMapper dtoMapper;
+    private final RestTemplate restTemplate;
+    private final boolean initialisationActive;
 
     public DepartementService(DepartementRepository departementRepository, RegionDao regionDao,
-                              VilleRepository villeRepository, Validator validator, DtoMapper dtoMapper) {
+                              VilleRepository villeRepository, Validator validator, DtoMapper dtoMapper,
+                              RestTemplate restTemplate, @Value("${application.init:false}") boolean initialisationActive) {
         this.departementRepository = departementRepository;
         this.regionDao = regionDao;
         this.villeRepository = villeRepository;
         this.validator = validator;
         this.dtoMapper = dtoMapper;
+        this.restTemplate = restTemplate;
+        this.initialisationActive = initialisationActive;
     }
 
     /**
@@ -195,5 +212,55 @@ public class DepartementService {
         if (departementRepository.existsByCodeIgnoreCaseAndIdNot(code, idExclu)) {
             throw new ExceptionMetier("Le code de département " + code + " existe déjà");
         }
+    }
+
+    /**
+     * Met à jour les noms des départements existants à partir de l'API officielle.
+     * @throws ExceptionMetier si l'API est indisponible ou renvoie des données invalides
+     */
+    @Transactional(rollbackFor = ExceptionMetier.class)
+    public void initData() throws ExceptionMetier {
+        // Désactivée : aucun appel HTTP ni aucune recherche de département n'est effectué.
+        if (!initialisationActive) {
+            return;
+        }
+
+        DepartementApiDto[] donnees;
+        try {
+            // RestTemplate transforme le tableau JSON en objets Java.
+            donnees = restTemplate.getForObject(URL_DEPARTEMENTS, DepartementApiDto[].class);
+        } catch (RestClientException exception) {
+            throw new ExceptionMetier("Impossible de récupérer les départements auprès de l’API géographique",
+                    HttpStatus.BAD_GATEWAY);
+        }
+        if (donnees == null || donnees.length == 0) {
+            throw new ExceptionMetier("L’API géographique ne renvoie aucun département", HttpStatus.BAD_GATEWAY);
+        }
+
+        // Vérifie toute la réponse avant de commencer les modifications en base.
+        Map<String, String> nomsParCode = new HashMap<>();
+        for (DepartementApiDto donnee : donnees) {
+            String code = donnee == null ? null : normaliserCode(donnee.getCode());
+            String nom = donnee == null || donnee.getNom() == null ? null : donnee.getNom().trim();
+            if (code == null || code.length() < 2 || code.length() > 3
+                    || nom == null || nom.length() < 2 || nom.length() > 100
+                    || nomsParCode.putIfAbsent(code, nom) != null) {
+                throw new ExceptionMetier("L’API géographique renvoie un département invalide", HttpStatus.BAD_GATEWAY);
+            }
+        }
+
+        List<Departement> modifies = new ArrayList<>();
+        for (Departement departement : departementRepository.findAllByOrderByIdAsc()) {
+            String nom = nomsParCode.get(normaliserCode(departement.getCode()));
+            // Un code local inconnu de l'API est conservé. Seul le nom peut changer.
+            if (nom != null && !nom.equals(departement.getNom())) {
+                departement.setNom(nom);
+                modifies.add(departement);
+            }
+        }
+        if (!modifies.isEmpty()) {
+            departementRepository.saveAllAndFlush(modifies);
+        }
+        LOGGER.info("Initialisation des noms terminée : {} département(s) mis à jour.", modifies.size());
     }
 }

@@ -3,6 +3,7 @@ package fr.diginamic.projet_spring.controleurs;
 import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.VilleService;
+import fr.diginamic.projet_spring.services.ExportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,6 +13,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +38,11 @@ public class VilleControleur {
 
     private final VilleService villeService;
 
-    public VilleControleur(VilleService villeService) {
+    private final ExportService exportService;
+
+    public VilleControleur(VilleService villeService, ExportService exportService) {
         this.villeService = villeService;
+        this.exportService = exportService;
     }
 
     /**
@@ -216,5 +224,24 @@ public class VilleControleur {
             @RequestParam int max)
             throws ExceptionMetier {
         return villeService.extractVilles(min, max);
+    }
+
+    /**
+     * Télécharge toutes les villes dont la population dépasse le minimum.
+     * @param min population minimale exclue
+     * @return le CSV avec les informations de la ville et de son département
+     */
+    @Operation(summary = "Exporte les villes au format CSV",
+            description = "Toutes les villes au-dessus de min, sans pagination. Un résultat vide contient seulement l’en-tête.")
+    @ApiResponse(responseCode = "200", description = "Fichier CSV UTF-8 à télécharger",
+            content = @Content(mediaType = "text/csv", schema = @Schema(type = "string", format = "binary")))
+    @GetMapping(value = "/export/csv", produces = "text/csv")
+    public ResponseEntity<byte[]> exporterCsv(
+            @Parameter(description = "Population minimale, borne exclue", example = "100000")
+            @RequestParam int min) {
+        // attachment indique au navigateur qu'il s'agit d'un fichier à télécharger.
+        String fichier = ContentDisposition.attachment().filename("villes-min-" + min + ".csv").build().toString();
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType("text/csv;charset=UTF-8"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, fichier).body(exportService.exporterVillesCsv(min));
     }
 }

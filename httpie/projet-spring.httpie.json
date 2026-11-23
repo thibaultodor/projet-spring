@@ -454,36 +454,7 @@
         },
         "requests": [
           {
-            "name": "01 — Lister les régions pour choisir regionId [200]",
-            "url": "{{baseUrl}}/regions",
-            "method": "GET",
-            "headers": [],
-            "queryParams": [],
-            "pathParams": [],
-            "auth": {
-              "type": "inherited"
-            },
-            "body": {
-              "type": "none",
-              "file": {
-                "name": ""
-              },
-              "text": {
-                "value": "",
-                "format": "application/json"
-              },
-              "form": {
-                "isMultipart": false,
-                "fields": []
-              },
-              "graphql": {
-                "query": "",
-                "variables": ""
-              }
-            }
-          },
-          {
-            "name": "02 — Lister les départements [200]",
+            "name": "01 — Lister les départements [200]",
             "url": "{{baseUrl}}/departements",
             "method": "GET",
             "headers": [],
@@ -512,7 +483,7 @@
             }
           },
           {
-            "name": "03 — Consulter le département choisi [200]",
+            "name": "02 — Consulter le département choisi [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}",
             "method": "GET",
             "headers": [],
@@ -541,7 +512,7 @@
             }
           },
           {
-            "name": "04 — Consulter ses villes [200]",
+            "name": "03 — Consulter ses villes [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes",
             "method": "GET",
             "headers": [],
@@ -570,7 +541,7 @@
             }
           },
           {
-            "name": "05 — Créer ZTP — recopier son id dans departementTestId [200]",
+            "name": "04 — Créer ZTP — recopier son id dans departementTestId [200]",
             "url": "{{baseUrl}}/departements",
             "method": "POST",
             "headers": [
@@ -605,7 +576,7 @@
             }
           },
           {
-            "name": "06 — Consulter le département créé [200]",
+            "name": "05 — Consulter le département créé [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
             "headers": [],
@@ -634,7 +605,7 @@
             }
           },
           {
-            "name": "07 — Modifier son code en ZTQ et son nom [200]",
+            "name": "06 — Modifier son code en ZTQ et son nom [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "PUT",
             "headers": [
@@ -669,7 +640,7 @@
             }
           },
           {
-            "name": "08 — Refuser le code ZTQ déjà créé [400]",
+            "name": "07 — Refuser le code ZTQ déjà créé [400]",
             "url": "{{baseUrl}}/departements",
             "method": "POST",
             "headers": [
@@ -704,7 +675,7 @@
             }
           },
           {
-            "name": "09 — Supprimer uniquement le département créé dans ce scénario [200]",
+            "name": "08 — Supprimer uniquement le département créé dans ce scénario [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "DELETE",
             "headers": [],
@@ -733,7 +704,7 @@
             }
           },
           {
-            "name": "10 — Vérifier sa disparition [404]",
+            "name": "09 — Vérifier sa disparition [404]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
             "headers": [],
@@ -2701,6 +2672,250 @@
           {
             "name": "06 — Département inconnu pour le PDF [404]",
             "url": "{{baseUrl}}/departements/ZZ/export/pdf",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "09 — Actuator",
+        "icon": {
+          "name": "default",
+          "color": "blue"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — Découvrir les endpoints Actuator exposés [200]",
+            "url": "{{baseUrl}}/actuator",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 — Vérifier la santé de l’application et de la base — status UP [200]",
+            "url": "{{baseUrl}}/actuator/health",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 — Lire le nom, la description et la version du projet [200]",
+            "url": "{{baseUrl}}/actuator/info",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 — Lister les mesures disponibles [200]",
+            "url": "{{baseUrl}}/actuator/metrics",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 — Consulter la mémoire utilisée par Java [200]",
+            "url": "{{baseUrl}}/actuator/metrics/jvm.memory.used",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 — Consulter le nombre de threads Java [200]",
+            "url": "{{baseUrl}}/actuator/metrics/jvm.threads.live",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "07 — Mesure inconnue [404]",
+            "url": "{{baseUrl}}/actuator/metrics/mesure.inconnue",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "08 — Vérifier qu’un endpoint non exposé est inaccessible [404]",
+            "url": "{{baseUrl}}/actuator/env",
             "method": "GET",
             "headers": [],
             "queryParams": [],

@@ -1,7 +1,7 @@
 package fr.diginamic.projet_spring.initialisation;
 
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
-import fr.diginamic.projet_spring.services.DepartementService;
+import fr.diginamic.projet_spring.services.interfaces.IDepartementService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitialisationDonnees implements CommandLineRunner {
 
-    private final DepartementService departementService;
+    private final IDepartementService departementService;
 
-    public InitialisationDonnees(DepartementService departementService) {
+    public InitialisationDonnees(IDepartementService departementService) {
         this.departementService = departementService;
     }
 

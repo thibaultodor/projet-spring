@@ -36,3 +36,27 @@ Le `CommandLineRunner` appelle `DepartementService.initData()`. Le service utili
 `https://geo.api.gouv.fr/departements`, retrouve les départements par leur code et met uniquement leur nom à jour.
 Les identifiants, les régions, les villes et les codes locaux inconnus de l'API sont conservés.
 Une réponse externe invalide est refusée avant les modifications ; une API indisponible produit un message d'erreur explicite.
+
+## Actuator
+
+Après le démarrage de l'application, ces routes permettent de vérifier son état :
+
+| Route | Résultat attendu |
+| --- | --- |
+| `/actuator` | Liens vers les endpoints exposés |
+| `/actuator/health` | `status` vaut `UP` si les contrôles réussissent, dont la connexion à la base |
+| `/actuator/info` | Nom, description et version du projet |
+| `/actuator/metrics` | Noms des mesures disponibles |
+| `/actuator/metrics/jvm.memory.used` | Quantité de mémoire utilisée par Java |
+
+Les endpoints exposés sont `health`, `info` et `metrics`. La collection HTTPie **09 — Actuator** contient les appels.
+`management.info.env.enabled=true` permet à `info` de lire les propriétés `info.app.*` ; cela n'expose pas l'endpoint `/actuator/env`.
+
+## Couplage faible entre contrôleurs et services
+
+Les contrats sont dans `services.interfaces` : `IVilleService`, `IDepartementService`, `IRegionService`, `IHelloService` et `IExportService`.
+Les classes de services réalisent ces interfaces avec `implements` et restent des beans `@Service`.
+
+Par exemple, `VilleControleur` reçoit un `IVilleService` dans son constructeur. Spring lui fournit un `VilleService`.
+Le contrôleur peut ainsi utiliser une autre réalisation du même contrat, sans modifier son code.
+Les tests montrent ce remplacement avec des services de test, sans base de données.

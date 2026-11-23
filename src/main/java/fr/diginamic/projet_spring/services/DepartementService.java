@@ -1,5 +1,7 @@
 package fr.diginamic.projet_spring.services;
 
+import fr.diginamic.projet_spring.services.interfaces.IDepartementService;
+
 import fr.diginamic.projet_spring.repositories.DepartementRepository;
 import fr.diginamic.projet_spring.dao.RegionDao;
 import fr.diginamic.projet_spring.repositories.VilleRepository;
@@ -21,17 +23,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /** Contrôle les départements et renvoie des DTO indépendants des relations JPA. */
 @Service
 @Transactional(readOnly = true)
-public class DepartementService {
+public class DepartementService implements IDepartementService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartementService.class);
     private static final String URL_DEPARTEMENTS = "https://geo.api.gouv.fr/departements";
@@ -60,8 +62,14 @@ public class DepartementService {
      * Convertit la liste sans parcourir les villes de chaque département.
      * @return les départements destinés à l'API
      */
+    @Override
     public List<DepartementDto> extractDepartements() {
-        return departementRepository.findAllByOrderByIdAsc().stream().map(dtoMapper::versDepartementDto).toList();
+        List<Departement> departements = departementRepository.findAllByOrderByIdAsc();
+        List<DepartementDto> resultat = new ArrayList<>();
+        for (Departement departement : departements) {
+            resultat.add(dtoMapper.versDepartementDto(departement));
+        }
+        return resultat;
     }
 
     /**
@@ -70,6 +78,7 @@ public class DepartementService {
      * @return son DTO
      * @throws ExceptionMetier si le département est absent
      */
+    @Override
     public DepartementDto extractDepartement(int id) throws ExceptionMetier {
         return dtoMapper.versDepartementDto(trouverEntite(id));
     }
@@ -81,6 +90,7 @@ public class DepartementService {
      * @throws ExceptionMetier si les données ou la région sont invalides
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public List<DepartementDto> insertDepartement(DepartementDto donnees) throws ExceptionMetier {
         creerEntite(donnees);
         return extractDepartements();
@@ -94,11 +104,15 @@ public class DepartementService {
      * @throws ExceptionMetier si un contrôle échoue
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public List<DepartementDto> modifierDepartement(int id, DepartementDto donnees) throws ExceptionMetier {
         Departement existant = trouverEntite(id);
         verifierDonnees(donnees);
         verifierCodeDisponible(donnees.getCode(), id);
-        Region region = donnees.getIdRegion() == null ? existant.getRegion() : trouverRegion(donnees.getIdRegion());
+        Region region = existant.getRegion();
+        if (donnees.getIdRegion() != null) {
+            region = trouverRegion(donnees.getIdRegion());
+        }
         existant.setCode(donnees.getCode());
         existant.setNom(donnees.getNom());
         existant.setRegion(region);
@@ -113,6 +127,7 @@ public class DepartementService {
      * @throws ExceptionMetier si le département est absent ou encore utilisé
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public List<DepartementDto> supprimerDepartement(int id) throws ExceptionMetier {
         Departement departement = trouverEntite(id);
         if (villeRepository.existsByDepartementId(id)) {
@@ -133,6 +148,7 @@ public class DepartementService {
      * @throws ExceptionMetier si les références sont absentes, incohérentes ou invalides
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public Departement resoudreDepartement(Integer id, String code) throws ExceptionMetier {
         String codeNormalise = normaliserCode(code);
         if (id == null && codeNormalise == null) {
@@ -162,7 +178,10 @@ public class DepartementService {
             if (trouve != null) {
                 return trouve;
             }
-            return creerEntite(new DepartementDto(0, codeNormalise, "Département " + codeNormalise, null));
+            DepartementDto nouveau = new DepartementDto();
+            nouveau.setCode(codeNormalise);
+            nouveau.setNom("Département " + codeNormalise);
+            return creerEntite(nouveau);
         }
         throw new ExceptionMetier("Département inconnu", HttpStatus.NOT_FOUND);
     }
@@ -170,15 +189,21 @@ public class DepartementService {
     private Departement creerEntite(DepartementDto donnees) throws ExceptionMetier {
         verifierDonnees(donnees);
         verifierCodeDisponible(donnees.getCode(), 0);
-        Region region = donnees.getIdRegion() == null ? null : trouverRegion(donnees.getIdRegion());
+        Region region = null;
+        if (donnees.getIdRegion() != null) {
+            region = trouverRegion(donnees.getIdRegion());
+        }
         Departement departement = new Departement(donnees.getCode(), donnees.getNom(), region);
         departementRepository.saveAndFlush(departement);
         return departement;
     }
 
     private Departement trouverEntite(int id) throws ExceptionMetier {
-        return departementRepository.findById(id)
-                .orElseThrow(() -> new ExceptionMetier("Département introuvable", HttpStatus.NOT_FOUND));
+        Departement departement = departementRepository.findById(id).orElse(null);
+        if (departement == null) {
+            throw new ExceptionMetier("Département introuvable", HttpStatus.NOT_FOUND);
+        }
+        return departement;
     }
 
     private void verifierDonnees(DepartementDto donnees) throws ExceptionMetier {
@@ -189,15 +214,23 @@ public class DepartementService {
         if (donnees.getNom() != null) {
             donnees.setNom(donnees.getNom().trim());
         }
+        // Bean Validation vérifie les annotations du DTO.
         Set<ConstraintViolation<DepartementDto>> erreurs = validator.validate(donnees);
         if (!erreurs.isEmpty()) {
-            throw new ExceptionMetier(erreurs.stream().map(ConstraintViolation::getMessage)
-                    .sorted().collect(Collectors.joining(" ; ")));
+            List<String> messages = new ArrayList<>();
+            for (ConstraintViolation<DepartementDto> erreur : erreurs) {
+                messages.add(erreur.getMessage());
+            }
+            Collections.sort(messages);
+            throw new ExceptionMetier(String.join(" ; ", messages));
         }
     }
 
     private String normaliserCode(String code) {
-        return code == null || code.isBlank() ? null : code.trim().toUpperCase(Locale.ROOT);
+        if (code == null || code.isBlank()) {
+            return null;
+        }
+        return code.trim().toUpperCase(Locale.ROOT);
     }
 
     private Region trouverRegion(int id) throws ExceptionMetier {
@@ -219,6 +252,7 @@ public class DepartementService {
      * @throws ExceptionMetier si l'API est indisponible ou renvoie des données invalides
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public void initData() throws ExceptionMetier {
         // Désactivée : aucun appel HTTP ni aucune recherche de département n'est effectué.
         if (!initialisationActive) {
@@ -240,13 +274,19 @@ public class DepartementService {
         // Vérifie toute la réponse avant de commencer les modifications en base.
         Map<String, String> nomsParCode = new HashMap<>();
         for (DepartementApiDto donnee : donnees) {
-            String code = donnee == null ? null : normaliserCode(donnee.getCode());
-            String nom = donnee == null || donnee.getNom() == null ? null : donnee.getNom().trim();
-            if (code == null || code.length() < 2 || code.length() > 3
-                    || nom == null || nom.length() < 2 || nom.length() > 100
-                    || nomsParCode.putIfAbsent(code, nom) != null) {
+            if (donnee == null || donnee.getNom() == null) {
                 throw new ExceptionMetier("L’API géographique renvoie un département invalide", HttpStatus.BAD_GATEWAY);
             }
+            String code = normaliserCode(donnee.getCode());
+            String nom = donnee.getNom().trim();
+            if (code == null || code.length() < 2 || code.length() > 3 || nom.length() < 2 || nom.length() > 100) {
+                throw new ExceptionMetier("L’API géographique renvoie un département invalide", HttpStatus.BAD_GATEWAY);
+            }
+            // Un même code ne doit pas apparaître deux fois dans la réponse.
+            if (nomsParCode.containsKey(code)) {
+                throw new ExceptionMetier("L’API géographique renvoie un département invalide", HttpStatus.BAD_GATEWAY);
+            }
+            nomsParCode.put(code, nom);
         }
 
         List<Departement> modifies = new ArrayList<>();

@@ -1,5 +1,8 @@
 package fr.diginamic.projet_spring.services;
 
+import fr.diginamic.projet_spring.services.interfaces.IVilleService;
+import fr.diginamic.projet_spring.services.interfaces.IDepartementService;
+
 import fr.diginamic.projet_spring.repositories.VilleRepository;
 import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.entites.Departement;
@@ -9,27 +12,29 @@ import fr.diginamic.projet_spring.mappers.DtoMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /** Applique les règles métier et convertit les entités en DTO pendant la transaction. */
 @Service
 @Transactional(readOnly = true)
-public class VilleService {
+public class VilleService implements IVilleService {
 
     private final VilleRepository villeRepository;
-    private final DepartementService departementService;
+    private final IDepartementService departementService;
     private final Validator validator;
     private final DtoMapper dtoMapper;
 
-    public VilleService(VilleRepository villeRepository, DepartementService departementService,
+    public VilleService(VilleRepository villeRepository, IDepartementService departementService,
                          Validator validator, DtoMapper dtoMapper) {
         this.villeRepository = villeRepository;
         this.departementService = departementService;
@@ -44,6 +49,7 @@ public class VilleService {
      * @return les DTO de la page et les nombres totaux de villes et de pages
      * @throws ExceptionMetier si les paramètres de pagination sont invalides
      */
+    @Override
     public Page<VilleDto> extractVillesPaginees(int page, int taille) throws ExceptionMetier {
         if (page < 0) {
             throw new ExceptionMetier("Le numéro de page doit être supérieur ou égal à 0");
@@ -53,7 +59,10 @@ public class VilleService {
         }
         // Le tri par id garde un ordre prévisible entre les pages.
         PageRequest pagination = PageRequest.of(page, taille, Sort.by("id"));
-        return villeRepository.findAll(pagination).map(dtoMapper::versVilleDto);
+        Page<Ville> villes = villeRepository.findAll(pagination);
+        List<VilleDto> resultat = convertir(villes.getContent());
+        // Garde le total des villes pour que le client puisse parcourir les pages.
+        return new PageImpl<>(resultat, pagination, villes.getTotalElements());
     }
 
     /**
@@ -62,6 +71,7 @@ public class VilleService {
      * @return le DTO de la ville
      * @throws ExceptionMetier si elle est absente
      */
+    @Override
     public VilleDto extractVille(int idVille) throws ExceptionMetier {
         return dtoMapper.versVilleDto(trouverEntite(idVille));
     }
@@ -72,6 +82,7 @@ public class VilleService {
      * @return les DTO correspondants
      * @throws ExceptionMetier si le texte est vide ou sans résultat
      */
+    @Override
     public List<VilleDto> extractVilles(String prefixe) throws ExceptionMetier {
         if (prefixe == null || prefixe.isBlank()) {
             throw new ExceptionMetier("Le début du nom est obligatoire");
@@ -90,6 +101,7 @@ public class VilleService {
      * @return les DTO correspondants
      * @throws ExceptionMetier si aucune ville ne correspond
      */
+    @Override
     public List<VilleDto> extractVilles(int min) throws ExceptionMetier {
         List<Ville> villes = villeRepository.findByPopulationGreaterThanOrderByPopulationDescIdAsc(min);
         if (villes.isEmpty()) {
@@ -106,6 +118,7 @@ public class VilleService {
      * @return les DTO correspondants
      * @throws ExceptionMetier si l'intervalle est invalide ou vide
      */
+    @Override
     public List<VilleDto> extractVilles(int min, int max) throws ExceptionMetier {
         verifierBornes(min, max);
         List<Ville> villes = villeRepository.findByPopulationGreaterThanAndPopulationLessThanOrderByPopulationDescIdAsc(min, max);
@@ -122,6 +135,7 @@ public class VilleService {
      * @return les DTO, éventuellement dans une liste vide
      * @throws ExceptionMetier si le département est absent
      */
+    @Override
     public List<VilleDto> extractVillesDuDepartement(int idDepartement) throws ExceptionMetier {
         departementService.extractDepartement(idDepartement);
         return convertir(villeRepository.findByDepartementIdOrderByIdAsc(idDepartement));
@@ -134,6 +148,7 @@ public class VilleService {
      * @return les DTO par population décroissante
      * @throws ExceptionMetier si le nombre est invalide ou le département absent
      */
+    @Override
     public List<VilleDto> extractPlusGrandesVilles(int idDepartement, int nombre) throws ExceptionMetier {
         if (nombre < 1) {
             throw new ExceptionMetier("Le nombre de villes doit être supérieur ou égal à 1");
@@ -151,6 +166,7 @@ public class VilleService {
      * @return les DTO, éventuellement dans une liste vide
      * @throws ExceptionMetier si les bornes sont invalides ou le département absent
      */
+    @Override
     public List<VilleDto> extractVillesDuDepartement(int idDepartement, int min, int max) throws ExceptionMetier {
         verifierBornes(min, max);
         departementService.extractDepartement(idDepartement);
@@ -165,6 +181,7 @@ public class VilleService {
      * @return les DTO par population décroissante, ou une liste vide
      * @throws ExceptionMetier si le département est absent
      */
+    @Override
     public List<VilleDto> extractVillesDuDepartement(int idDepartement, int min) throws ExceptionMetier {
         departementService.extractDepartement(idDepartement);
         return convertir(villeRepository.findByDepartementIdAndPopulationGreaterThanOrderByPopulationDescIdAsc(
@@ -178,6 +195,7 @@ public class VilleService {
      * @throws ExceptionMetier si un contrôle échoue
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public List<VilleDto> insertVille(VilleDto donnees) throws ExceptionMetier {
         verifierDonnees(donnees);
         // La création éventuelle du département et celle de la ville partagent la transaction.
@@ -197,6 +215,7 @@ public class VilleService {
      * @throws ExceptionMetier si la ville ou ses nouvelles données sont invalides
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public List<VilleDto> modifierVille(int idVille, VilleDto donnees) throws ExceptionMetier {
         Ville existante = trouverEntite(idVille);
         verifierDonnees(donnees);
@@ -217,6 +236,7 @@ public class VilleService {
      * @throws ExceptionMetier si la ville est absente
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
+    @Override
     public List<VilleDto> supprimerVille(int idVille) throws ExceptionMetier {
         villeRepository.delete(trouverEntite(idVille));
         villeRepository.flush();
@@ -230,12 +250,19 @@ public class VilleService {
 
     private List<VilleDto> convertir(List<Ville> villes) {
         // Cette copie termine l'accès aux relations avant que le contrôleur renvoie du JSON.
-        return villes.stream().map(dtoMapper::versVilleDto).toList();
+        List<VilleDto> resultat = new ArrayList<>();
+        for (Ville ville : villes) {
+            resultat.add(dtoMapper.versVilleDto(ville));
+        }
+        return resultat;
     }
 
     private Ville trouverEntite(int id) throws ExceptionMetier {
-        return villeRepository.findById(id)
-                .orElseThrow(() -> new ExceptionMetier("Ville introuvable", HttpStatus.NOT_FOUND));
+        Ville ville = villeRepository.findById(id).orElse(null);
+        if (ville == null) {
+            throw new ExceptionMetier("Ville introuvable", HttpStatus.NOT_FOUND);
+        }
+        return ville;
     }
 
     private void verifierDonnees(VilleDto donnees) throws ExceptionMetier {
@@ -245,10 +272,15 @@ public class VilleService {
         if (donnees.getNom() != null) {
             donnees.setNom(donnees.getNom().trim());
         }
+        // Bean Validation vérifie les annotations du DTO.
         Set<ConstraintViolation<VilleDto>> erreurs = validator.validate(donnees);
         if (!erreurs.isEmpty()) {
-            throw new ExceptionMetier(erreurs.stream().map(ConstraintViolation::getMessage)
-                    .sorted().collect(Collectors.joining(" ; ")));
+            List<String> messages = new ArrayList<>();
+            for (ConstraintViolation<VilleDto> erreur : erreurs) {
+                messages.add(erreur.getMessage());
+            }
+            Collections.sort(messages);
+            throw new ExceptionMetier(String.join(" ; ", messages));
         }
     }
 

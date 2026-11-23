@@ -1,5 +1,7 @@
 package fr.diginamic.projet_spring.services;
 
+import fr.diginamic.projet_spring.services.interfaces.IExportService;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -31,7 +33,7 @@ import java.util.Locale;
 /** Prépare les fichiers en gardant les relations JPA accessibles pendant leur construction. */
 @Service
 @Transactional(readOnly = true)
-public class ExportService {
+public class ExportService implements IExportService {
 
     private static final BaseColor BLEU = new BaseColor(35, 58, 78);
     private static final BaseColor BORDURE = new BaseColor(220, 226, 231);
@@ -49,6 +51,7 @@ public class ExportService {
      * @param min population minimale exclue
      * @return un CSV UTF-8 ; seul l'en-tête est présent si aucune ville ne correspond
      */
+    @Override
     public byte[] exporterVillesCsv(int min) {
         List<Ville> villes = villeRepository.findByPopulationGreaterThanOrderByPopulationDescIdAsc(min);
         // Le marqueur UTF-8 aide les tableurs à afficher correctement les accents.
@@ -75,6 +78,7 @@ public class ExportService {
      * @return le PDF avec le nom, le code et toutes les villes du département
      * @throws ExceptionMetier si le département est absent ou si le PDF ne peut pas être créé
      */
+    @Override
     public byte[] exporterDepartementPdf(String code) throws ExceptionMetier {
         if (code == null || code.isBlank()) {
             throw new ExceptionMetier("Le code du département est obligatoire");

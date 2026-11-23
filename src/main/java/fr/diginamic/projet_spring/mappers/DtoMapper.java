@@ -1,10 +1,8 @@
 package fr.diginamic.projet_spring.mappers;
 
 import fr.diginamic.projet_spring.dto.DepartementDto;
-import fr.diginamic.projet_spring.dto.RegionDto;
 import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.entites.Departement;
-import fr.diginamic.projet_spring.entites.Region;
 import fr.diginamic.projet_spring.entites.Ville;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +17,13 @@ public class DtoMapper {
      */
     public VilleDto versVilleDto(Ville ville) {
         Departement departement = ville.getDepartement();
-        return new VilleDto(ville.getId(), ville.getNom(), ville.getPopulation(),
-                departement.getId(), departement.getCode());
+        VilleDto dto = new VilleDto();
+        dto.setId(ville.getId());
+        dto.setNom(ville.getNom());
+        dto.setPopulation(ville.getPopulation());
+        dto.setIdDepartement(departement.getId());
+        dto.setCodeDepartement(departement.getCode());
+        return dto;
     }
 
     /**
@@ -29,16 +32,13 @@ public class DtoMapper {
      * @return le département et l'id éventuel de sa région
      */
     public DepartementDto versDepartementDto(Departement departement) {
-        Integer idRegion = departement.getRegion() == null ? null : departement.getRegion().getId();
-        return new DepartementDto(departement.getId(), departement.getCode(), departement.getNom(), idRegion);
-    }
-
-    /**
-     * Copie les informations utiles de la région.
-     * @param region entité à convertir
-     * @return le DTO destiné à l'API
-     */
-    public RegionDto versRegionDto(Region region) {
-        return new RegionDto(region.getId(), region.getCode(), region.getNom());
+        DepartementDto dto = new DepartementDto();
+        dto.setId(departement.getId());
+        dto.setCode(departement.getCode());
+        dto.setNom(departement.getNom());
+        if (departement.getRegion() != null) {
+            dto.setIdRegion(departement.getRegion().getId());
+        }
+        return dto;
     }
 }

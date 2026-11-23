@@ -1,6 +1,7 @@
 package fr.diginamic.projet_spring.controleurs;
 
-import fr.diginamic.projet_spring.services.HelloService;
+import fr.diginamic.projet_spring.controleurs.interfaces.IHelloControleur;
+import fr.diginamic.projet_spring.services.interfaces.IHelloService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,16 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 // Place le résultat des méthodes directement dans la réponse HTTP.
 @RestController
 @RequestMapping("/hello")
-public class HelloControleur {
+public class HelloControleur implements IHelloControleur {
 
-    private final HelloService helloService;
+    // Le contrôleur utilise un contrat. Spring fournit la classe qui le réalise.
+    private final IHelloService helloService;
 
     // Spring fournit le service au constructeur : c'est l'injection de dépendance.
-    public HelloControleur(HelloService helloService) {
+    public HelloControleur(IHelloService helloService) {
         this.helloService = helloService;
     }
 
-    // Répond à GET /hello avec le message fourni par le service.
+    @Override
     @GetMapping
     public String direHello() {
         return helloService.salutations();

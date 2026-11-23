@@ -20,6 +20,12 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<!-- Actuator fournit les endpoints de santé, d'information et de mesures. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 		<!-- Génère la documentation OpenAPI et fournit la page Swagger UI. -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -60,13 +66,14 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<!-- Ce starter fournit JUnit, Mockito, Spring Test et MockMvc. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Les tests ordinaires utilisent une base en mémoire indépendante. -->
+		<!-- H2 fournit la configuration de base réservée aux tests Spring. -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

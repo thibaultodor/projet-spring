@@ -20,6 +20,13 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<!-- Génère la documentation OpenAPI et fournit la page Swagger UI. -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+
 		<!-- JPA gère les entités et leurs transactions. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

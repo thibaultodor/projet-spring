@@ -118,6 +118,19 @@ public class DepartementControleur {
     }
 
     /**
+     * Liste les villes d'un département au-dessus d'un minimum exclu.
+     * @param id département recherché
+     * @param min population minimale exclue
+     * @return les DTO par population décroissante
+     * @throws ExceptionMetier si le département est absent
+     */
+    @GetMapping(value = "/{id}/villes/population", params = "!max")
+    public List<VilleDto> getVillesParPopulationMin(@PathVariable int id, @RequestParam int min)
+            throws ExceptionMetier {
+        return villeService.extractVillesDuDepartement(id, min);
+    }
+
+    /**
      * Filtre les villes d'un département entre deux populations.
      * @param id département recherché
      * @param min borne basse exclue
@@ -125,7 +138,7 @@ public class DepartementControleur {
      * @return les DTO correspondants
      * @throws ExceptionMetier si les bornes sont invalides ou le département absent
      */
-    @GetMapping("/{id}/villes/population")
+    @GetMapping(value = "/{id}/villes/population", params = "max")
     public List<VilleDto> getVillesParPopulation(@PathVariable int id, @RequestParam int min, @RequestParam int max)
             throws ExceptionMetier {
         return villeService.extractVillesDuDepartement(id, min, max);

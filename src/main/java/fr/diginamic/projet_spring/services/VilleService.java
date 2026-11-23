@@ -1,6 +1,6 @@
 package fr.diginamic.projet_spring.services;
 
-import fr.diginamic.projet_spring.dao.VilleDao;
+import fr.diginamic.projet_spring.repositories.VilleRepository;
 import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.entites.Departement;
 import fr.diginamic.projet_spring.entites.Ville;
@@ -8,6 +8,9 @@ import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.mappers.DtoMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,22 +24,36 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class VilleService {
 
-    private final VilleDao villeDao;
+    private final VilleRepository villeRepository;
     private final DepartementService departementService;
     private final Validator validator;
     private final DtoMapper dtoMapper;
 
-    public VilleService(VilleDao villeDao, DepartementService departementService,
+    public VilleService(VilleRepository villeRepository, DepartementService departementService,
                          Validator validator, DtoMapper dtoMapper) {
-        this.villeDao = villeDao;
+        this.villeRepository = villeRepository;
         this.departementService = departementService;
         this.validator = validator;
         this.dtoMapper = dtoMapper;
     }
 
-    /** @return les villes de l'API, sans relations JPA imbriquées. */
-    public List<VilleDto> extractVilles() {
-        return convertir(villeDao.extractVilles());
+    /**
+     * Charge uniquement la page demandée et compte les villes pour préparer la navigation.
+     * @param page numéro de page, à partir de 0
+     * @param taille nombre de villes par page, entre 1 et 100
+     * @return les DTO de la page et les nombres totaux de villes et de pages
+     * @throws ExceptionMetier si les paramètres de pagination sont invalides
+     */
+    public Page<VilleDto> extractVillesPaginees(int page, int taille) throws ExceptionMetier {
+        if (page < 0) {
+            throw new ExceptionMetier("Le numéro de page doit être supérieur ou égal à 0");
+        }
+        if (taille < 1 || taille > 100) {
+            throw new ExceptionMetier("La taille de page doit être comprise entre 1 et 100");
+        }
+        // Le tri par id garde un ordre prévisible entre les pages.
+        PageRequest pagination = PageRequest.of(page, taille, Sort.by("id"));
+        return villeRepository.findAll(pagination).map(dtoMapper::versVilleDto);
     }
 
     /**
@@ -59,7 +76,7 @@ public class VilleService {
         if (prefixe == null || prefixe.isBlank()) {
             throw new ExceptionMetier("Le début du nom est obligatoire");
         }
-        List<Ville> villes = villeDao.extractVilles(prefixe);
+        List<Ville> villes = villeRepository.findByNomStartingWithIgnoreCaseOrderByIdAsc(prefixe);
         if (villes.isEmpty()) {
             throw new ExceptionMetier("Aucune ville dont le nom commence par " + prefixe + " n’a été trouvée",
                     HttpStatus.NOT_FOUND);
@@ -74,7 +91,7 @@ public class VilleService {
      * @throws ExceptionMetier si aucune ville ne correspond
      */
     public List<VilleDto> extractVilles(int min) throws ExceptionMetier {
-        List<Ville> villes = villeDao.extractVilles(min);
+        List<Ville> villes = villeRepository.findByPopulationGreaterThanOrderByPopulationDescIdAsc(min);
         if (villes.isEmpty()) {
             throw new ExceptionMetier("Aucune ville n’a une population supérieure à " + min,
                     HttpStatus.NOT_FOUND);
@@ -91,7 +108,7 @@ public class VilleService {
      */
     public List<VilleDto> extractVilles(int min, int max) throws ExceptionMetier {
         verifierBornes(min, max);
-        List<Ville> villes = villeDao.extractVilles(min, max);
+        List<Ville> villes = villeRepository.findByPopulationGreaterThanAndPopulationLessThanOrderByPopulationDescIdAsc(min, max);
         if (villes.isEmpty()) {
             throw new ExceptionMetier("Aucune ville n’a une population comprise entre " + min + " et " + max,
                     HttpStatus.NOT_FOUND);
@@ -107,7 +124,7 @@ public class VilleService {
      */
     public List<VilleDto> extractVillesDuDepartement(int idDepartement) throws ExceptionMetier {
         departementService.extractDepartement(idDepartement);
-        return convertir(villeDao.extractVillesDuDepartement(idDepartement));
+        return convertir(villeRepository.findByDepartementIdOrderByIdAsc(idDepartement));
     }
 
     /**
@@ -122,7 +139,8 @@ public class VilleService {
             throw new ExceptionMetier("Le nombre de villes doit être supérieur ou égal à 1");
         }
         departementService.extractDepartement(idDepartement);
-        return convertir(villeDao.extractPlusGrandesVilles(idDepartement, nombre));
+        return convertir(villeRepository.findByDepartementIdOrderByPopulationDescIdAsc(
+                idDepartement, PageRequest.of(0, nombre)));
     }
 
     /**
@@ -136,7 +154,21 @@ public class VilleService {
     public List<VilleDto> extractVillesDuDepartement(int idDepartement, int min, int max) throws ExceptionMetier {
         verifierBornes(min, max);
         departementService.extractDepartement(idDepartement);
-        return convertir(villeDao.extractVillesDuDepartement(idDepartement, min, max));
+        return convertir(villeRepository.findByDepartementIdAndPopulationGreaterThanAndPopulationLessThanOrderByPopulationDescIdAsc(
+                idDepartement, min, max));
+    }
+
+    /**
+     * Recherche les villes d'un département au-dessus d'un minimum exclu.
+     * @param idDepartement département recherché
+     * @param min population minimale exclue
+     * @return les DTO par population décroissante, ou une liste vide
+     * @throws ExceptionMetier si le département est absent
+     */
+    public List<VilleDto> extractVillesDuDepartement(int idDepartement, int min) throws ExceptionMetier {
+        departementService.extractDepartement(idDepartement);
+        return convertir(villeRepository.findByDepartementIdAndPopulationGreaterThanOrderByPopulationDescIdAsc(
+                idDepartement, min));
     }
 
     /**
@@ -153,8 +185,8 @@ public class VilleService {
                 donnees.getIdDepartement(), donnees.getCodeDepartement());
         verifierNomDisponible(donnees.getNom(), departement.getId(), 0);
         Ville ville = new Ville(donnees.getNom(), donnees.getPopulation(), departement);
-        villeDao.insertVille(ville);
-        return extractVilles();
+        villeRepository.saveAndFlush(ville);
+        return listerVillesApresModification();
     }
 
     /**
@@ -174,8 +206,8 @@ public class VilleService {
         existante.setNom(donnees.getNom());
         existante.setPopulation(donnees.getPopulation());
         existante.setDepartement(departement);
-        villeDao.modifierVille(existante);
-        return extractVilles();
+        villeRepository.saveAndFlush(existante);
+        return listerVillesApresModification();
     }
 
     /**
@@ -186,8 +218,14 @@ public class VilleService {
      */
     @Transactional(rollbackFor = ExceptionMetier.class)
     public List<VilleDto> supprimerVille(int idVille) throws ExceptionMetier {
-        villeDao.supprimerVille(trouverEntite(idVille));
-        return extractVilles();
+        villeRepository.delete(trouverEntite(idVille));
+        villeRepository.flush();
+        return listerVillesApresModification();
+    }
+
+    private List<VilleDto> listerVillesApresModification() {
+        // Renvoie toutes les villes après une modification. Seul GET /villes est paginé.
+        return convertir(villeRepository.findAll(Sort.by("id")));
     }
 
     private List<VilleDto> convertir(List<Ville> villes) {
@@ -196,11 +234,8 @@ public class VilleService {
     }
 
     private Ville trouverEntite(int id) throws ExceptionMetier {
-        Ville ville = villeDao.extractVille(id);
-        if (ville == null) {
-            throw new ExceptionMetier("Ville introuvable", HttpStatus.NOT_FOUND);
-        }
-        return ville;
+        return villeRepository.findById(id)
+                .orElseThrow(() -> new ExceptionMetier("Ville introuvable", HttpStatus.NOT_FOUND));
     }
 
     private void verifierDonnees(VilleDto donnees) throws ExceptionMetier {
@@ -224,7 +259,7 @@ public class VilleService {
     }
 
     private void verifierNomDisponible(String nom, int idDepartement, int idExclu) throws ExceptionMetier {
-        if (villeDao.existeParNomEtDepartement(nom, idDepartement, idExclu)) {
+        if (villeRepository.existsByNomIgnoreCaseAndDepartementIdAndIdNot(nom, idDepartement, idExclu)) {
             throw new ExceptionMetier("La ville \"" + nom + "\" existe déjà dans ce département");
         }
     }

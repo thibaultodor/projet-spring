@@ -1,8 +1,8 @@
 package fr.diginamic.projet_spring.services;
 
-import fr.diginamic.projet_spring.dao.DepartementDao;
+import fr.diginamic.projet_spring.repositories.DepartementRepository;
 import fr.diginamic.projet_spring.dao.RegionDao;
-import fr.diginamic.projet_spring.dao.VilleDao;
+import fr.diginamic.projet_spring.repositories.VilleRepository;
 import fr.diginamic.projet_spring.dto.DepartementDto;
 import fr.diginamic.projet_spring.entites.Departement;
 import fr.diginamic.projet_spring.entites.Region;
@@ -24,17 +24,17 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class DepartementService {
 
-    private final DepartementDao departementDao;
+    private final DepartementRepository departementRepository;
     private final RegionDao regionDao;
-    private final VilleDao villeDao;
+    private final VilleRepository villeRepository;
     private final Validator validator;
     private final DtoMapper dtoMapper;
 
-    public DepartementService(DepartementDao departementDao, RegionDao regionDao,
-                              VilleDao villeDao, Validator validator, DtoMapper dtoMapper) {
-        this.departementDao = departementDao;
+    public DepartementService(DepartementRepository departementRepository, RegionDao regionDao,
+                              VilleRepository villeRepository, Validator validator, DtoMapper dtoMapper) {
+        this.departementRepository = departementRepository;
         this.regionDao = regionDao;
-        this.villeDao = villeDao;
+        this.villeRepository = villeRepository;
         this.validator = validator;
         this.dtoMapper = dtoMapper;
     }
@@ -44,7 +44,7 @@ public class DepartementService {
      * @return les départements destinés à l'API
      */
     public List<DepartementDto> extractDepartements() {
-        return departementDao.extractDepartements().stream().map(dtoMapper::versDepartementDto).toList();
+        return departementRepository.findAllByOrderByIdAsc().stream().map(dtoMapper::versDepartementDto).toList();
     }
 
     /**
@@ -85,7 +85,7 @@ public class DepartementService {
         existant.setCode(donnees.getCode());
         existant.setNom(donnees.getNom());
         existant.setRegion(region);
-        departementDao.modifierDepartement(existant);
+        departementRepository.saveAndFlush(existant);
         return extractDepartements();
     }
 
@@ -98,11 +98,12 @@ public class DepartementService {
     @Transactional(rollbackFor = ExceptionMetier.class)
     public List<DepartementDto> supprimerDepartement(int id) throws ExceptionMetier {
         Departement departement = trouverEntite(id);
-        if (villeDao.compterParDepartement(id) > 0) {
+        if (villeRepository.existsByDepartementId(id)) {
             throw new ExceptionMetier("Impossible de supprimer un département qui contient des villes",
                     HttpStatus.CONFLICT);
         }
-        departementDao.supprimerDepartement(departement);
+        departementRepository.delete(departement);
+        departementRepository.flush();
         return extractDepartements();
     }
 
@@ -129,7 +130,7 @@ public class DepartementService {
 
         // Un id connu reste prioritaire. Un code fourni en plus doit désigner le même département.
         if (id != null) {
-            Departement trouve = departementDao.extractDepartement(id);
+            Departement trouve = departementRepository.findById(id).orElse(null);
             if (trouve != null) {
                 if (codeNormalise != null && !trouve.getCode().equalsIgnoreCase(codeNormalise)) {
                     throw new ExceptionMetier("L’identifiant et le code du département ne correspondent pas");
@@ -140,7 +141,7 @@ public class DepartementService {
 
         // Un id inconnu peut être remplacé par un code connu ou par la création d'un nouveau code.
         if (codeNormalise != null) {
-            Departement trouve = departementDao.extractParCode(codeNormalise);
+            Departement trouve = departementRepository.findByCodeIgnoreCase(codeNormalise).orElse(null);
             if (trouve != null) {
                 return trouve;
             }
@@ -154,16 +155,13 @@ public class DepartementService {
         verifierCodeDisponible(donnees.getCode(), 0);
         Region region = donnees.getIdRegion() == null ? null : trouverRegion(donnees.getIdRegion());
         Departement departement = new Departement(donnees.getCode(), donnees.getNom(), region);
-        departementDao.insertDepartement(departement);
+        departementRepository.saveAndFlush(departement);
         return departement;
     }
 
     private Departement trouverEntite(int id) throws ExceptionMetier {
-        Departement departement = departementDao.extractDepartement(id);
-        if (departement == null) {
-            throw new ExceptionMetier("Département introuvable", HttpStatus.NOT_FOUND);
-        }
-        return departement;
+        return departementRepository.findById(id)
+                .orElseThrow(() -> new ExceptionMetier("Département introuvable", HttpStatus.NOT_FOUND));
     }
 
     private void verifierDonnees(DepartementDto donnees) throws ExceptionMetier {
@@ -194,7 +192,7 @@ public class DepartementService {
     }
 
     private void verifierCodeDisponible(String code, int idExclu) throws ExceptionMetier {
-        if (departementDao.existeParCode(code, idExclu)) {
+        if (departementRepository.existsByCodeIgnoreCaseAndIdNot(code, idExclu)) {
             throw new ExceptionMetier("Le code de département " + code + " existe déjà");
         }
     }

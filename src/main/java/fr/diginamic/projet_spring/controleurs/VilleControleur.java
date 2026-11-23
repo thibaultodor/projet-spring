@@ -4,6 +4,7 @@ import fr.diginamic.projet_spring.dto.VilleDto;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.VilleService;
 import jakarta.validation.Valid;
+import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/** Expose uniquement des VilleDto : les entités JPA restent dans les services et DAO. */
+/** Expose uniquement des VilleDto : les entités JPA restent dans les services et repositories. */
 @RestController
 @RequestMapping("/villes")
 public class VilleControleur {
@@ -28,13 +29,17 @@ public class VilleControleur {
     }
 
     /**
-     * Expose la liste complète des villes.
-     *
-     * @return toutes les villes en base.
+     * Expose une page de villes avec les informations de navigation.
+     * @param page numéro de page, 0 par défaut
+     * @param size nombre de villes par page, 20 par défaut et 100 au maximum
+     * @return content contient les villes ; page contient les totaux et le numéro demandé
+     * @throws ExceptionMetier si la pagination est invalide
      */
     @GetMapping
-    public List<VilleDto> getVilles() {
-        return villeService.extractVilles();
+    public PagedModel<VilleDto> getVilles(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "20") int size) throws ExceptionMetier {
+        // PagedModel fournit une réponse JSON simple : content et page.
+        return new PagedModel<>(villeService.extractVillesPaginees(page, size));
     }
 
     /**

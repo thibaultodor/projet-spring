@@ -24,11 +24,22 @@
         },
         "requests": [
           {
-            "name": "01 — Lister les villes du recensement [200]",
+            "name": "01 — Lister une page de villes — réponses dans content et totaux dans page [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
             "headers": [],
-            "queryParams": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "{{page}}",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "{{taillePage}}",
+                "enabled": true
+              }
+            ],
             "pathParams": [],
             "auth": {
               "type": "inherited"
@@ -1977,6 +1988,478 @@
             }
           }
         ]
+      },
+      {
+        "name": "06 — Repositories et pagination",
+        "icon": {
+          "name": "database",
+          "color": "blue"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 — Première page de 10 villes — content et page.totalElements [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "0",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "10",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 — Deuxième page de 10 villes — page.number vaut 1 [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "1",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "10",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 — Page au-delà des résultats — content vide [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "1000000",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "20",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 — Refuser un numéro de page négatif [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "-1",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "20",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 — Refuser une taille de page nulle [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "0",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "0",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 — Refuser une taille supérieure à 100 [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "page",
+                "value": "0",
+                "enabled": true
+              },
+              {
+                "name": "size",
+                "value": "101",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "07 — Population supérieure à 100000 — tri décroissant [200]",
+            "url": "{{baseUrl}}/villes/recherche/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "100000",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "08 — Population entre 100000 et 500000 — bornes exclues et tri décroissant [200]",
+            "url": "{{baseUrl}}/villes/recherche/population/entre",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "100000",
+                "enabled": true
+              },
+              {
+                "name": "max",
+                "value": "500000",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "09 — Département au-dessus de 20000 habitants — tri décroissant [200]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "20000",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "10 — Département entre 20000 et 100000 — bornes exclues et tri décroissant [200]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "20000",
+                "enabled": true
+              },
+              {
+                "name": "max",
+                "value": "100000",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "11 — Les trois plus grandes villes du département [200]",
+            "url": "{{baseUrl}}/departements/{{departementId}}/villes/plus-grandes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "n",
+                "value": "3",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "12 — Minimum dans un département inconnu [404]",
+            "url": "{{baseUrl}}/departements/2147483647/villes/population",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "min",
+                "value": "0",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
       }
     ],
     "environments": [
@@ -2029,6 +2512,16 @@
           {
             "name": "departementAutoId",
             "value": "0",
+            "isSecret": false
+          },
+          {
+            "name": "page",
+            "value": "0",
+            "isSecret": false
+          },
+          {
+            "name": "taillePage",
+            "value": "20",
             "isSecret": false
           }
         ]

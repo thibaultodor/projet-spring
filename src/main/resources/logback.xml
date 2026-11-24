@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Le dossier est relatif au répertoire de lancement. LOG_PATH permet de le changer. -->
+    <property name="LOG_DIR" value="${LOG_PATH:-logs}"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"/>
+
+    <!-- Affiche les messages dans la console, notamment celle d'IntelliJ. -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Écrit les mêmes messages dans un fichier, conservé entre les démarrages. -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/projet-spring.log</file>
+        <append>true</append>
+
+        <!-- Archive chaque jour ou à 10 Mo. Garde au plus 14 jours et 100 Mo d'archives. -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archives/projet-spring.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Hibernate envoie ses requêtes SQL à ces deux sorties, au niveau DEBUG. -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+
+    <!-- Pour les autres messages, conserve INFO et les niveaux plus importants : WARN et ERROR. -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

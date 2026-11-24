@@ -60,3 +60,16 @@ Les classes de services réalisent ces interfaces avec `implements` et restent d
 Par exemple, `VilleControleur` reçoit un `IVilleService` dans son constructeur. Spring lui fournit un `VilleService`.
 Le contrôleur peut ainsi utiliser une autre réalisation du même contrat, sans modifier son code.
 Les tests montrent ce remplacement avec des services de test, sans base de données.
+
+## Logs avec Logback
+
+`src/main/resources/logback.xml` est chargé automatiquement au démarrage.
+Les messages apparaissent dans la console et dans `logs/projet-spring.log`, à partir du répertoire de lancement.
+Chaque ligne contient la date, le niveau, le thread, la classe et le message. L'encodage UTF-8 conserve les accents.
+
+Le niveau général est `INFO`. Les requêtes SQL utilisent le logger `org.hibernate.SQL` au niveau `DEBUG`.
+`spring.jpa.show-sql=false` évite que Hibernate affiche une deuxième copie des mêmes requêtes directement dans la console.
+
+Le fichier est archivé chaque jour ou lorsqu'il atteint 10 Mo. Les archives compressées sont dans `logs/archives`,
+avec une conservation de 14 jours et un plafond total de 100 Mo d'archives. Le dossier `logs` est ignoré par Git.
+Pour utiliser un autre dossier, définir la variable d'environnement ou l'option Java `LOG_PATH`.

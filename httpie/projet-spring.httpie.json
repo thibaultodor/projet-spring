@@ -2612,7 +2612,7 @@
             }
           },
           {
-            "name": "04 — Télécharger le PDF du département par son CODE [200]",
+            "name": "04 — Télécharger le rapport illustré du département par son CODE [200]",
             "url": "{{baseUrl}}/departements/{{codeDepartement}}/export/pdf",
             "method": "GET",
             "headers": [],
@@ -2641,7 +2641,7 @@
             }
           },
           {
-            "name": "05 — Télécharger le PDF de Corse-du-Sud, code 2A [200]",
+            "name": "05 — Télécharger le rapport illustré de Corse-du-Sud, code 2A [200]",
             "url": "{{baseUrl}}/departements/2A/export/pdf",
             "method": "GET",
             "headers": [],

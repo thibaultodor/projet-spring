@@ -1,75 +1,59 @@
-# Projet Spring — API de recensement
+# Projet Spring - API de recensement
 
-## Documentation Swagger
+API Spring Boot de gestion des villes et des départements, avec exports CSV et PDF.
 
-Après avoir rechargé les dépendances Maven et démarré l'application depuis IntelliJ :
+## Démarrage
 
-- [Swagger UI](http://localhost:8080/swagger-ui.html) affiche les routes, leurs paramètres et les exemples de DTO.
-- [OpenAPI JSON](http://localhost:8080/v3/api-docs) fournit la description de l'API au format OpenAPI 3.0.
-- [OpenAPI YAML](http://localhost:8080/v3/api-docs.yaml) fournit la même description en YAML.
+Le projet utilise le JDK 27 et MariaDB, disponible avec XAMPP.
 
-Dans Swagger, ouvrir une route puis cliquer sur **Try it out**, remplir les valeurs et cliquer sur **Execute**.
-Les appels POST, PUT et DELETE modifient les données de la base, comme les requêtes HTTPie.
+1. Démarrer MariaDB dans XAMPP.
+2. Dans un client SQL, exécuter [creation-recensement.sql](database/creation-recensement.sql),
+   puis [le script d'import des villes](database/tp-spring-10-recensement.sql).
+3. Recharger les dépendances Maven et lancer `ProjetSpringApplication` depuis IntelliJ.
 
-`SwaggerConfig` définit le titre et le contact. `@Operation` décrit une route, `@Parameter` ses paramètres,
-`@ApiResponses` ses réponses HTTP et `@Schema` les données échangées.
-Les erreurs de validation sont renvoyées par champ en JSON ; les erreurs métier sont renvoyées en texte.
+La connexion est configurée dans `src/main/resources/application.properties` : base `recensement`,
+port `3306`, utilisateur `root`, sans mot de passe. Les variables `DB_URL`, `DB_USERNAME` et
+`DB_PASSWORD` permettent de modifier ces valeurs.
 
-Les scénarios HTTPie sont dans [httpie](httpie/), et les scripts de données dans [database](database/).
+Les scripts SQL s'exécutent manuellement. L'import met à jour les villes existantes sans créer de doublons.
+Pour une ancienne base où la région est obligatoire, le script
+[region-facultative](database/tp09-region-facultative.sql) permet d'adapter la table des départements.
 
-## Exports de fichiers
+## Utilisation
 
-- `GET /villes/export/csv?min=100000` télécharge toutes les villes dont la population est strictement supérieure à 100000.
-  Le CSV contient le nom de la ville, sa population, le code et le nom du département. Il est en UTF-8, avec des virgules comme séparateurs.
-- `GET /departements/34/export/pdf` télécharge la fiche de l'Hérault avec toutes ses villes et leurs populations.
-  Ici `34` est le **code départemental**, différent de l'identifiant utilisé par les routes CRUD.
+- [Swagger UI](http://localhost:8080/swagger-ui.html) permet de consulter et d'essayer les routes.
+- La description [OpenAPI](http://localhost:8080/v3/api-docs) est disponible en JSON.
+- Pour HTTPie Desktop, importer [projet-spring.httpie.json](httpie/projet-spring.httpie.json).
+  Les variables, dont `baseUrl`, se trouvent dans l'environnement **Defaults**.
 
-Les exports ne sont pas paginés. Un CSV vide garde ses colonnes, et un département sans villes conserve sa fiche PDF.
-Les deux routes sont également documentées dans Swagger et dans la collection HTTPie **08 — Exports CSV et PDF**.
+`GET /villes?page=0&size=20` renvoie une page de villes. Les résultats sont dans `content` et les informations
+de pagination dans `page`. La première page porte le numéro `0` ; `size` peut aller de `1` à `100`.
 
-## Initialisation des noms des départements
+Les routes des départements utilisent leur identifiant en base. L'export PDF utilise leur code,
+par exemple `34` pour l'Hérault.
 
-`application.init=false` est la configuration habituelle : aucun appel externe n'est réalisé au démarrage.
-Pour actualiser les noms, passer cette propriété à `true`, démarrer l'application une fois, puis la remettre à `false`.
+## Exports
 
-Le `CommandLineRunner` appelle `DepartementService.initData()`. Le service utilise `RestTemplate` pour lire
-`https://geo.api.gouv.fr/departements`, retrouve les départements par leur code et met uniquement leur nom à jour.
-Les identifiants, les régions, les villes et les codes locaux inconnus de l'API sont conservés.
-Une réponse externe invalide est refusée avant les modifications ; une API indisponible produit un message d'erreur explicite.
+- `GET /villes/export/csv?min=100000` exporte les villes de plus de 100000 habitants.
+  Le fichier contient le nom, la population, le code et le nom du département.
+- `GET /departements/34/export/pdf` produit le rapport de l'Hérault : statistiques, graphiques,
+  classement et liste des villes. Un CSV est également joint au PDF.
 
-## Actuator
+Les exports contiennent tous les résultats, sans pagination.
 
-Après le démarrage de l'application, ces routes permettent de vérifier son état :
+## Configuration
 
-| Route | Résultat attendu |
-| --- | --- |
-| `/actuator` | Liens vers les endpoints exposés |
-| `/actuator/health` | `status` vaut `UP` si les contrôles réussissent, dont la connexion à la base |
-| `/actuator/info` | Nom, description et version du projet |
-| `/actuator/metrics` | Noms des mesures disponibles |
-| `/actuator/metrics/jvm.memory.used` | Quantité de mémoire utilisée par Java |
+Pour actualiser les noms des départements depuis l'API géographique, passer `application.init` à `true`,
+démarrer une fois l'application, puis remettre la valeur à `false`.
 
-Les endpoints exposés sont `health`, `info` et `metrics`. La collection HTTPie **09 — Actuator** contient les appels.
-`management.info.env.enabled=true` permet à `info` de lire les propriétés `info.app.*` ; cela n'expose pas l'endpoint `/actuator/env`.
+Les logs sont configurés dans `src/main/resources/logback.xml`. Ils s'affichent dans la console et dans
+`logs/projet-spring.log`, avec une rotation des fichiers. `LOG_PATH` permet de changer le dossier de sortie.
 
-## Couplage faible entre contrôleurs et services
+Actuator expose `/actuator/health`, `/actuator/info` et `/actuator/metrics` pour consulter l'état de l'application.
 
-Les contrats sont dans `services.interfaces` : `IVilleService`, `IDepartementService`, `IRegionService`, `IHelloService` et `IExportService`.
-Les classes de services réalisent ces interfaces avec `implements` et restent des beans `@Service`.
+## Polices du rapport PDF
 
-Par exemple, `VilleControleur` reçoit un `IVilleService` dans son constructeur. Spring lui fournit un `VilleService`.
-Le contrôleur peut ainsi utiliser une autre réalisation du même contrat, sans modifier son code.
-Les tests montrent ce remplacement avec des services de test, sans base de données.
-
-## Logs avec Logback
-
-`src/main/resources/logback.xml` est chargé automatiquement au démarrage.
-Les messages apparaissent dans la console et dans `logs/projet-spring.log`, à partir du répertoire de lancement.
-Chaque ligne contient la date, le niveau, le thread, la classe et le message. L'encodage UTF-8 conserve les accents.
-
-Le niveau général est `INFO`. Les requêtes SQL utilisent le logger `org.hibernate.SQL` au niveau `DEBUG`.
-`spring.jpa.show-sql=false` évite que Hibernate affiche une deuxième copie des mêmes requêtes directement dans la console.
-
-Le fichier est archivé chaque jour ou lorsqu'il atteint 10 Mo. Les archives compressées sont dans `logs/archives`,
-avec une conservation de 14 jours et un plafond total de 100 Mo d'archives. Le dossier `logs` est ignoré par Git.
-Pour utiliser un autre dossier, définir la variable d'environnement ou l'option Java `LOG_PATH`.
+Les fichiers originaux de [Lato](https://github.com/google/fonts/tree/main/ofl/lato),
+par Lukasz Dziedzic / tyPoland, et de [Crimson Text](https://github.com/google/fonts/tree/main/ofl/crimsontext)
+sont embarqués sans modification. Ils sont distribués sous licence SIL Open Font License 1.1 :
+[licence Lato](src/main/resources/fonts/OFL.txt) et [licence Crimson Text](src/main/resources/fonts/OFL-CrimsonText.txt).

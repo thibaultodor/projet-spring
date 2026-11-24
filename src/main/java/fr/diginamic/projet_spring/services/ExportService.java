@@ -1,23 +1,14 @@
 package fr.diginamic.projet_spring.services;
 
-import fr.diginamic.projet_spring.services.interfaces.IExportService;
-
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
+import fr.diginamic.projet_spring.services.interfaces.IExportService;
 import fr.diginamic.projet_spring.entites.Departement;
 import fr.diginamic.projet_spring.entites.Ville;
 import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
+import fr.diginamic.projet_spring.exports.pdf.DonneesRapportDepartement;
+import fr.diginamic.projet_spring.exports.pdf.DonneesRapportDepartement.ReferenceDepartement;
+import fr.diginamic.projet_spring.exports.pdf.DonneesRapportDepartement.VilleChiffres;
+import fr.diginamic.projet_spring.exports.pdf.RapportDepartementPdf;
 import fr.diginamic.projet_spring.repositories.DepartementRepository;
 import fr.diginamic.projet_spring.repositories.VilleRepository;
 import org.springframework.data.domain.Pageable;
@@ -25,25 +16,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 
-/** Prépare les fichiers en gardant les relations JPA accessibles pendant leur construction. */
+/** Charge les données des exports ; la mise en page PDF est confiée à son générateur. */
 @Service
 @Transactional(readOnly = true)
 public class ExportService implements IExportService {
-
-    private static final BaseColor BLEU = new BaseColor(35, 58, 78);
-    private static final BaseColor BORDURE = new BaseColor(220, 226, 231);
-
     private final VilleRepository villeRepository;
     private final DepartementRepository departementRepository;
+    private final RapportDepartementPdf rapportPdf;
 
-    public ExportService(VilleRepository villeRepository, DepartementRepository departementRepository) {
+    public ExportService(VilleRepository villeRepository, DepartementRepository departementRepository,
+                         RapportDepartementPdf rapportPdf) {
         this.villeRepository = villeRepository;
         this.departementRepository = departementRepository;
+        this.rapportPdf = rapportPdf;
     }
 
     /**
@@ -72,10 +64,11 @@ public class ExportService implements IExportService {
         return "\"" + (valeur == null ? "" : valeur.replace("\"", "\"\"")) + "\"";
     }
 
+
     /**
-     * Construit la fiche PDF d'un département retrouvé par son code.
+     * Prépare le portrait, les graphiques, les comparaisons et l'annuaire du département.
      * @param code code départemental, par exemple 34, 2A ou 974
-     * @return le PDF avec le nom, le code et toutes les villes du département
+     * @return le rapport complet avec ses polices et sa navigation embarquées
      * @throws ExceptionMetier si le département est absent ou si le PDF ne peut pas être créé
      */
     @Override
@@ -85,82 +78,23 @@ public class ExportService implements IExportService {
         }
         Departement departement = departementRepository.findByCodeIgnoreCase(code.trim().toUpperCase(Locale.ROOT))
                 .orElseThrow(() -> new ExceptionMetier("Département introuvable", HttpStatus.NOT_FOUND));
-        // unpaged conserve toutes les villes ; le tri reste celui des populations décroissantes.
-        List<Ville> villes = villeRepository.findByDepartementIdOrderByPopulationDescIdAsc(
-                departement.getId(), Pageable.unpaged());
+        List<VilleChiffres> villes = villeRepository.findByDepartementIdOrderByPopulationDescIdAsc(
+                        departement.getId(), Pageable.unpaged()).stream()
+                .map(ville -> new VilleChiffres(ville.getId(), ville.getNom(), ville.getPopulation())).toList();
+        List<ReferenceDepartement> references = departementRepository.extraireStatistiquesRapport().stream()
+                .map(reference -> new ReferenceDepartement(reference.getId(), reference.getCode(), reference.getNom(),
+                        reference.getIdRegion(), reference.getPopulation(), reference.getNombreVilles())).toList();
         String nom = departement.getNom() == null || departement.getNom().isBlank()
                 ? "Département " + departement.getCode() : departement.getNom();
-
-        ByteArrayOutputStream sortie = new ByteArrayOutputStream();
-        Document document = new Document(PageSize.A4, 44, 44, 48, 44);
-        Font texte = new Font(Font.FontFamily.HELVETICA, 11);
+        Integer idRegion = departement.getRegion() == null ? null : departement.getRegion().getId();
+        String region = departement.getRegion() == null ? null : departement.getRegion().getNom();
+        // Cette copie termine le chargement JPA avant de passer au dessin du document.
+        DonneesRapportDepartement donnees = new DonneesRapportDepartement(departement.getId(), departement.getCode(),
+                nom, idRegion, region, ZonedDateTime.now(ZoneId.of("Europe/Paris")), villes, references);
         try {
-            // iText écrit dans la mémoire : aucun fichier temporaire n'est créé sur le serveur.
-            PdfWriter writer = PdfWriter.getInstance(document, sortie);
-            writer.setLanguage("fr-FR");
-            writer.setPageEvent(new NumerotationPages());
-            document.addTitle(nom);
-            document.addSubject("Villes du département " + departement.getCode());
-            document.addCreator("API de recensement");
-            document.open();
-
-            Paragraph titre = new Paragraph(nom, new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD, BLEU));
-            titre.setSpacingAfter(16);
-            document.add(titre);
-            document.add(new Paragraph("Code du département : " + departement.getCode(), texte));
-            document.add(new Paragraph("Nom du département : " + nom, texte));
-            Paragraph sousTitre = new Paragraph("Villes du département (" + villes.size() + ")",
-                    new Font(Font.FontFamily.HELVETICA, 13, Font.BOLD, BLEU));
-            sousTitre.setSpacingBefore(20);
-            sousTitre.setSpacingAfter(10);
-            document.add(sousTitre);
-
-            if (villes.isEmpty()) {
-                document.add(new Paragraph("Aucune ville enregistrée dans ce département.", texte));
-            } else {
-                ajouterTableau(document, villes, texte);
-            }
-        } catch (DocumentException exception) {
+            return rapportPdf.generer(donnees);
+        } catch (IOException | DocumentException exception) {
             throw new ExceptionMetier("Impossible de générer le PDF du département", HttpStatus.INTERNAL_SERVER_ERROR);
-        } finally {
-            // Ferme le document pour terminer la structure du PDF avant de renvoyer ses octets.
-            document.close();
-        }
-        return sortie.toByteArray();
-    }
-
-    private void ajouterTableau(Document document, List<Ville> villes, Font texte) throws DocumentException {
-        PdfPTable tableau = new PdfPTable(new float[]{3, 1});
-        tableau.setWidthPercentage(100);
-        // Répète les titres de colonnes lorsque la liste passe à la page suivante.
-        tableau.setHeaderRows(1);
-        Font entete = new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD, BaseColor.WHITE);
-        ajouterCellule(tableau, "Nom de la ville", entete, Element.ALIGN_LEFT, BLEU);
-        ajouterCellule(tableau, "Population", entete, Element.ALIGN_RIGHT, BLEU);
-        int ligne = 0;
-        for (Ville ville : villes) {
-            BaseColor fond = ligne++ % 2 == 0 ? new BaseColor(246, 248, 250) : BaseColor.WHITE;
-            ajouterCellule(tableau, ville.getNom(), texte, Element.ALIGN_LEFT, fond);
-            ajouterCellule(tableau, Integer.toString(ville.getPopulation()), texte, Element.ALIGN_RIGHT, fond);
-        }
-        document.add(tableau);
-    }
-
-    private void ajouterCellule(PdfPTable tableau, String valeur, Font police, int alignement, BaseColor fond) {
-        PdfPCell cellule = new PdfPCell(new Phrase(valeur, police));
-        cellule.setPadding(6);
-        cellule.setHorizontalAlignment(alignement);
-        cellule.setBorderColor(BORDURE);
-        cellule.setBackgroundColor(fond);
-        tableau.addCell(cellule);
-    }
-
-    private static class NumerotationPages extends PdfPageEventHelper {
-        @Override
-        public void onEndPage(PdfWriter writer, Document document) {
-            Font police = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.GRAY);
-            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT,
-                    new Phrase("Page " + writer.getPageNumber(), police), document.right(), document.bottom() - 22, 0);
         }
     }
 }

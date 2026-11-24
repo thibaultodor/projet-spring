@@ -196,7 +196,8 @@ public interface IDepartementControleur {
      * @return la fiche PDF avec les villes et leurs populations
      * @throws ExceptionMetier si le département est introuvable ou si le PDF ne peut pas être créé
      */
-    @Operation(summary = "Exporte un département et ses villes au format PDF")
+    @Operation(summary = "Exporte un rapport illustré du département au format PDF",
+            description = "Synthèse, graphiques, repères dans la base, signets et annuaire complet des villes.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Fichier PDF à télécharger",
                 content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary"))),

@@ -51,6 +51,18 @@ Les logs sont configurés dans `src/main/resources/logback.xml`. Ils s'affichent
 
 Actuator expose `/actuator/health`, `/actuator/info` et `/actuator/metrics` pour consulter l'état de l'application.
 
+## Tests
+
+`DepartementServiceTest` teste la gestion des départements avec Mockito.
+`DepartementControleurTest` vérifie les routes avec MockMvc.
+Le profil `test` utilise H2 en mémoire et désactive l'initialisation externe.
+
+```powershell
+.\mvnw.cmd test
+```
+
+Les deux classes peuvent aussi être lancées directement depuis IntelliJ.
+
 ## Polices du rapport PDF
 
 Les fichiers originaux de [Lato](https://github.com/google/fonts/tree/main/ofl/lato),

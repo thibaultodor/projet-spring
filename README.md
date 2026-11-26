@@ -8,7 +8,8 @@ Le projet utilise le JDK 27 et MariaDB, disponible avec XAMPP.
 
 1. Démarrer MariaDB dans XAMPP.
 2. Dans un client SQL, exécuter [creation-recensement.sql](database/creation-recensement.sql),
-   puis [le script d'import des villes](database/tp-spring-10-recensement.sql).
+   puis [le script d'import des villes](database/tp-spring-10-recensement.sql)
+   et [les comptes de démonstration](database/utilisateurs.sql).
 3. Recharger les dépendances Maven et lancer `ProjetSpringApplication` depuis IntelliJ.
 
 La connexion est configurée dans `src/main/resources/application.properties` : base `recensement`,
@@ -67,14 +68,15 @@ Les deux classes peuvent aussi être lancées directement depuis IntelliJ.
 
 ## Sécurité
 
-Les comptes sont conservés en mémoire et leurs mots de passe sont hachés avec BCrypt.
+Les comptes et les rôles sont enregistrés en base, dans `utilisateur`, `role` et `utilisateur_role`.
+`JpaUserDetailsService` les retrouve avec `UtilisateurRepository`. Les mots de passe sont hachés avec BCrypt.
 
 | Compte | Mot de passe | Rôle | Accès |
 | --- | --- | --- | --- |
 | `user` | `user1234` | `USER` | GET |
 | `admin` | `admin1234` | `ADMIN` | POST, PUT, DELETE et autres méthodes |
 
-Ces comptes de démonstration remplacent le mot de passe généré au démarrage. Le compte admin n'a pas
+Le script `database/utilisateurs.sql` crée ces deux comptes et peut être relancé sans doublon. Le compte admin n'a pas
 le rôle USER : ses GET sont donc refusés. Une absence de connexion ou un mauvais mot de passe renvoie
 401 ; un rôle insuffisant renvoie 403.
 

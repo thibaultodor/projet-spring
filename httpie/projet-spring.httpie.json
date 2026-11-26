@@ -46,7 +46,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -110,7 +110,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -145,7 +149,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -174,7 +178,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -209,7 +213,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -238,7 +246,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -273,7 +281,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -302,7 +314,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -331,7 +343,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "none",
@@ -360,7 +376,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -395,7 +411,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -424,7 +444,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "none",
@@ -562,7 +586,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -626,7 +654,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -661,7 +693,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -690,7 +726,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "none",
@@ -770,7 +810,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -805,7 +849,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -869,7 +913,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -933,7 +981,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "none",
@@ -962,7 +1014,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "none",
@@ -991,7 +1047,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "none",
@@ -1071,7 +1131,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1106,7 +1170,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1141,7 +1209,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1176,7 +1248,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1211,7 +1287,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1246,7 +1326,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1281,7 +1365,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1316,7 +1404,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1351,7 +1443,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1386,7 +1482,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1421,7 +1521,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1456,7 +1560,11 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
             },
             "body": {
               "type": "text",
@@ -1507,7 +1615,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -1542,7 +1650,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -1582,7 +1690,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -1617,7 +1725,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -1652,7 +1760,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -1692,7 +1800,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -1732,7 +1840,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2013,7 +2121,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2053,7 +2161,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2093,7 +2201,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2133,7 +2241,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2173,7 +2281,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2213,7 +2321,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2248,7 +2356,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2288,7 +2396,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2558,7 +2666,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2593,7 +2701,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2622,7 +2730,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "none"
+              "type": "inherited"
             },
             "body": {
               "type": "none",
@@ -2981,7 +3089,7 @@
         ]
       },
       {
-        "name": "10 - Sécurité HTTP Basic",
+        "name": "10 - Sécurité par rôles",
         "icon": {
           "name": "default",
           "color": "gray"
@@ -2991,7 +3099,7 @@
         },
         "requests": [
           {
-            "name": "01 - Lire les villes sans connexion [200]",
+            "name": "01 - Refuser les villes sans connexion [401]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
             "headers": [],
@@ -3020,72 +3128,8 @@
             }
           },
           {
-            "name": "02 - Refuser les départements sans connexion [401]",
-            "url": "{{baseUrl}}/departements",
-            "method": "GET",
-            "headers": [],
-            "queryParams": [],
-            "pathParams": [],
-            "auth": {
-              "type": "none"
-            },
-            "body": {
-              "type": "none",
-              "file": {
-                "name": ""
-              },
-              "text": {
-                "value": "",
-                "format": "application/json"
-              },
-              "form": {
-                "isMultipart": false,
-                "fields": []
-              },
-              "graphql": {
-                "query": "",
-                "variables": ""
-              }
-            }
-          },
-          {
-            "name": "03 - Refuser une création sans connexion [401]",
+            "name": "02 - Lire les villes avec USER [200]",
             "url": "{{baseUrl}}/villes",
-            "method": "POST",
-            "headers": [
-              {
-                "name": "Content-Type",
-                "value": "application/json",
-                "enabled": true
-              }
-            ],
-            "queryParams": [],
-            "pathParams": [],
-            "auth": {
-              "type": "none"
-            },
-            "body": {
-              "type": "text",
-              "file": {
-                "name": ""
-              },
-              "text": {
-                "value": "{}",
-                "format": "application/json"
-              },
-              "form": {
-                "isMultipart": false,
-                "fields": []
-              },
-              "graphql": {
-                "query": "",
-                "variables": ""
-              }
-            }
-          },
-          {
-            "name": "04 - Lire les départements avec HTTP Basic [200]",
-            "url": "{{baseUrl}}/departements",
             "method": "GET",
             "headers": [],
             "queryParams": [],
@@ -3117,8 +3161,263 @@
             }
           },
           {
-            "name": "05 - Refuser un mauvais mot de passe [401]",
-            "url": "{{baseUrl}}/departements",
+            "name": "03 - Refuser la lecture avec ADMIN [403]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 - Refuser une création avec USER [403]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{username}}",
+                "password": "{{password}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 - Refuser une modification avec USER [403]",
+            "url": "{{baseUrl}}/villes/2147483647",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{username}}",
+                "password": "{{password}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"nom\": \"Ville de contrôle\", \"population\": 1000, \"idDepartement\": \"{{departementId}}\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 - Refuser une suppression avec USER [403]",
+            "url": "{{baseUrl}}/villes/2147483647",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{username}}",
+                "password": "{{password}}"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "07 - Vérifier les données après connexion ADMIN [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "08 - Atteindre la modification avec ADMIN sur un id inconnu [404]",
+            "url": "{{baseUrl}}/villes/2147483647",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"nom\": \"Ville de contrôle\", \"population\": 1000, \"idDepartement\": \"{{departementId}}\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "09 - Atteindre la suppression avec ADMIN sur un id inconnu [404]",
+            "url": "{{baseUrl}}/villes/2147483647",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "10 - Refuser un mauvais mot de passe [401]",
+            "url": "{{baseUrl}}/villes",
             "method": "GET",
             "headers": [],
             "queryParams": [],
@@ -3137,45 +3436,6 @@
               },
               "text": {
                 "value": "",
-                "format": "application/json"
-              },
-              "form": {
-                "isMultipart": false,
-                "fields": []
-              },
-              "graphql": {
-                "query": "",
-                "variables": ""
-              }
-            }
-          },
-          {
-            "name": "06 - Vérifier les données après connexion [400]",
-            "url": "{{baseUrl}}/villes",
-            "method": "POST",
-            "headers": [
-              {
-                "name": "Content-Type",
-                "value": "application/json",
-                "enabled": true
-              }
-            ],
-            "queryParams": [],
-            "pathParams": [],
-            "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{username}}",
-                "password": "{{password}}"
-              }
-            },
-            "body": {
-              "type": "text",
-              "file": {
-                "name": ""
-              },
-              "text": {
-                "value": "{}",
                 "format": "application/json"
               },
               "form": {
@@ -3265,7 +3525,17 @@
           },
           {
             "name": "password",
-            "value": "",
+            "value": "user1234",
+            "isSecret": true
+          },
+          {
+            "name": "adminUsername",
+            "value": "admin",
+            "isSecret": false
+          },
+          {
+            "name": "adminPassword",
+            "value": "admin1234",
             "isSecret": true
           }
         ]

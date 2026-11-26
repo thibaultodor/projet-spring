@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@WithMockUser
+@WithMockUser(roles = {"USER", "ADMIN"})
 class DepartementControleurTest {
 
     private static final String JSON_AVEC_REGION = """

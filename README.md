@@ -25,6 +25,8 @@ Pour une ancienne base où la région est obligatoire, le script
 - La description [OpenAPI](http://localhost:8080/v3/api-docs) est disponible en JSON.
 - Pour HTTPie Desktop, importer [projet-spring.httpie.json](httpie/projet-spring.httpie.json).
   Les variables, dont `baseUrl`, se trouvent dans l'environnement **Defaults**.
+  Pour réimporter dans un espace existant, décocher les environnements, puis actualiser les quatre
+  variables de connexion dans **Defaults**.
 
 `GET /villes?page=0&size=20` renvoie une page de villes. Les résultats sont dans `content` et les informations
 de pagination dans `page`. La première page porte le numéro `0` ; `size` peut aller de `1` à `100`.
@@ -65,11 +67,17 @@ Les deux classes peuvent aussi être lancées directement depuis IntelliJ.
 
 ## Sécurité
 
-Les GET sur `/villes` et `/villes/**` sont publics. Les autres requêtes demandent une connexion HTTP Basic,
-y compris les départements, Swagger, les PDF et Actuator.
+Les comptes sont conservés en mémoire et leurs mots de passe sont hachés avec BCrypt.
 
-Le compte par défaut est `user`. Son mot de passe est généré à chaque démarrage et affiché dans la console
-après `Using generated security password`.
+| Compte | Mot de passe | Rôle | Accès |
+| --- | --- | --- | --- |
+| `user` | `user1234` | `USER` | GET |
+| `admin` | `admin1234` | `ADMIN` | POST, PUT, DELETE et autres méthodes |
 
-Dans HTTPie, renseigner `username` et `password` dans **Defaults**. La collection **10 - Sécurité HTTP Basic**
-permet de comparer les appels sans connexion et les appels authentifiés.
+Ces comptes de démonstration remplacent le mot de passe généré au démarrage. Le compte admin n'a pas
+le rôle USER : ses GET sont donc refusés. Une absence de connexion ou un mauvais mot de passe renvoie
+401 ; un rôle insuffisant renvoie 403.
+
+Dans HTTPie, les variables `username` et `password` servent aux GET, `adminUsername` et `adminPassword`
+aux autres méthodes. Elles sont renseignées dans **Defaults**. La collection **10 - Sécurité par rôles**
+contient les cas autorisés et les refus attendus.

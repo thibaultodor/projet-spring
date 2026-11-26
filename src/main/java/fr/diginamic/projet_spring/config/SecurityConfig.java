@@ -6,11 +6,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-/** Définit les routes publiques et celles qui demandent une connexion. */
+/** Définit les droits d'accès aux routes. */
 @Configuration
 public class SecurityConfig {
+
+    /** Fournit le hachage utilisé pour vérifier les mots de passe. */
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     /** Construit les règles appliquées avant l'appel des contrôleurs. */
     @Bean
@@ -22,8 +29,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 // Laisse Spring produire les réponses d'erreur après le contrôle initial.
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                .requestMatchers(HttpMethod.GET, "/villes", "/villes/**").permitAll()
-                .anyRequest().authenticated());
+                // hasRole ajoute le préfixe ROLE_ au nom du rôle.
+                .requestMatchers(HttpMethod.GET, "/**").hasRole("USER")
+                .anyRequest().hasRole("ADMIN"));
         return http.build();
     }
 }

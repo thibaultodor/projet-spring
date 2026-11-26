@@ -20,7 +20,11 @@
           "color": "green"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -42,7 +46,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -141,7 +145,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -170,7 +174,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -234,7 +238,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -298,7 +302,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -356,7 +360,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -450,7 +454,11 @@
           "color": "green"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -741,7 +749,11 @@
           "color": "green"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -793,7 +805,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1038,7 +1050,11 @@
           "color": "green"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -1470,7 +1486,11 @@
           "color": "green"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -1487,7 +1507,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1522,7 +1542,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1562,7 +1582,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1597,7 +1617,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1632,7 +1652,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1672,7 +1692,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1712,7 +1732,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1967,7 +1987,11 @@
           "color": "blue"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -1989,7 +2013,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2029,7 +2053,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2069,7 +2093,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2109,7 +2133,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2149,7 +2173,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2189,7 +2213,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2224,7 +2248,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2264,7 +2288,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2439,7 +2463,11 @@
           "color": "blue"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -2509,7 +2537,11 @@
           "color": "green"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -2526,7 +2558,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2561,7 +2593,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2590,7 +2622,7 @@
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2707,7 +2739,11 @@
           "color": "blue"
         },
         "auth": {
-          "type": "none"
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
         },
         "requests": [
           {
@@ -2943,6 +2979,216 @@
             }
           }
         ]
+      },
+      {
+        "name": "10 - Sécurité HTTP Basic",
+        "icon": {
+          "name": "default",
+          "color": "gray"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 - Lire les villes sans connexion [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 - Refuser les départements sans connexion [401]",
+            "url": "{{baseUrl}}/departements",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 - Refuser une création sans connexion [401]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 - Lire les départements avec HTTP Basic [200]",
+            "url": "{{baseUrl}}/departements",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{username}}",
+                "password": "{{password}}"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 - Refuser un mauvais mot de passe [401]",
+            "url": "{{baseUrl}}/departements",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{username}}",
+                "password": "mot-de-passe-incorrect"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 - Vérifier les données après connexion [400]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{username}}",
+                "password": "{{password}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
       }
     ],
     "environments": [
@@ -3011,6 +3257,16 @@
             "name": "populationMin",
             "value": "100000",
             "isSecret": false
+          },
+          {
+            "name": "username",
+            "value": "user",
+            "isSecret": false
+          },
+          {
+            "name": "password",
+            "value": "",
+            "isSecret": true
           }
         ]
       }

@@ -63,9 +63,13 @@ Le profil `test` utilise H2 en mémoire et désactive l'initialisation externe.
 
 Les deux classes peuvent aussi être lancées directement depuis IntelliJ.
 
-## Polices du rapport PDF
+## Sécurité
 
-Les fichiers originaux de [Lato](https://github.com/google/fonts/tree/main/ofl/lato),
-par Lukasz Dziedzic / tyPoland, et de [Crimson Text](https://github.com/google/fonts/tree/main/ofl/crimsontext)
-sont embarqués sans modification. Ils sont distribués sous licence SIL Open Font License 1.1 :
-[licence Lato](src/main/resources/fonts/OFL.txt) et [licence Crimson Text](src/main/resources/fonts/OFL-CrimsonText.txt).
+Les GET sur `/villes` et `/villes/**` sont publics. Les autres requêtes demandent une connexion HTTP Basic,
+y compris les départements, Swagger, les PDF et Actuator.
+
+Le compte par défaut est `user`. Son mot de passe est généré à chaque démarrage et affiché dans la console
+après `Using generated security password`.
+
+Dans HTTPie, renseigner `username` et `password` dans **Defaults**. La collection **10 - Sécurité HTTP Basic**
+permet de comparer les appels sans connexion et les appels authentifiés.

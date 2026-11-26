@@ -3449,6 +3449,395 @@
             }
           }
         ]
+      },
+      {
+        "name": "11 - Suivi des modifications",
+        "icon": {
+          "name": "default",
+          "color": "blue"
+        },
+        "auth": {
+          "type": "basic",
+          "credentials": {
+            "username": "{{username}}",
+            "password": "{{password}}"
+          }
+        },
+        "requests": [
+          {
+            "name": "01 - Créer ZSU et copier son id dans departementTestId [200]",
+            "url": "{{baseUrl}}/departements",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"code\": \"ZSU\", \"nom\": \"Département de suivi\", \"userMaj\": \"intrus\", \"dateMaj\": \"2000-01-01T00:00:00\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 - Lire userMaj et dateMaj du département [200]",
+            "url": "{{baseUrl}}/departements/{{departementTestId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 - Modifier le département et renouveler sa signature [200]",
+            "url": "{{baseUrl}}/departements/{{departementTestId}}",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"code\": \"ZSU\", \"nom\": \"Département de suivi modifié\", \"userMaj\": \"intrus\", \"dateMaj\": \"2000-01-01T00:00:00\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 - Vérifier la nouvelle signature du département [200]",
+            "url": "{{baseUrl}}/departements/{{departementTestId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "05 - Créer une ville et laisser le serveur remplir sa signature [200]",
+            "url": "{{baseUrl}}/villes",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"nom\": \"Ville de suivi\", \"population\": 1000, \"idDepartement\": \"{{departementTestId}}\", \"userMaj\": \"intrus\", \"dateMaj\": \"2000-01-01T00:00:00\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "06 - Retrouver la ville et copier son id dans villeId [200]",
+            "url": "{{baseUrl}}/villes/recherche/nom",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [
+              {
+                "name": "nom",
+                "value": "Ville de suivi",
+                "enabled": true
+              }
+            ],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "07 - Modifier la ville et renouveler sa signature [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "PUT",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"nom\": \"Ville de suivi\", \"population\": 2000, \"idDepartement\": \"{{departementTestId}}\", \"userMaj\": \"intrus\", \"dateMaj\": \"2000-01-01T00:00:00\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "08 - Vérifier userMaj et dateMaj de la ville [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "09 - Supprimer la ville et consulter la trace dans le fichier de logs [200]",
+            "url": "{{baseUrl}}/villes/{{villeId}}",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "10 - Supprimer le département et consulter sa trace dans les logs [200]",
+            "url": "{{baseUrl}}/departements/{{departementTestId}}",
+            "method": "DELETE",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "basic",
+              "credentials": {
+                "username": "{{adminUsername}}",
+                "password": "{{adminPassword}}"
+              }
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "11 - Vérifier la disparition du département [404]",
+            "url": "{{baseUrl}}/departements/{{departementTestId}}",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
       }
     ],
     "environments": [

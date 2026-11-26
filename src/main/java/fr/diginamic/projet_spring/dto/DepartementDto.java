@@ -1,11 +1,14 @@
 package fr.diginamic.projet_spring.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDateTime;
 
 /** Département envoyé en JSON, sans sa collection de villes pour éviter une boucle. */
 @Schema(description = "Département avec une région facultative, sans collection de villes.")
@@ -27,6 +30,15 @@ public class DepartementDto {
     @Min(value = 1, message = "L’identifiant de la région doit être positif")
     @Schema(description = "Région facultative ; une valeur omise en PUT conserve la région actuelle", example = "33")
     private Integer idRegion;
+
+    // Ces informations viennent du serveur. Le client ne peut pas les modifier.
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Dernier utilisateur ayant ajouté ou modifié la donnée", accessMode = Schema.AccessMode.READ_ONLY)
+    private String userMaj;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Date et heure de la dernière écriture", accessMode = Schema.AccessMode.READ_ONLY)
+    private LocalDateTime dateMaj;
 
     public DepartementDto() {
     }
@@ -72,4 +84,8 @@ public class DepartementDto {
         this.idRegion = idRegion;
     }
 
+    public String getUserMaj() { return userMaj; }
+    public void setUserMaj(String userMaj) { this.userMaj = userMaj; }
+    public LocalDateTime getDateMaj() { return dateMaj; }
+    public void setDateMaj(LocalDateTime dateMaj) { this.dateMaj = dateMaj; }
 }

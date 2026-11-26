@@ -20,6 +20,9 @@ Les scripts SQL s'exécutent manuellement. L'import met à jour les villes exist
 Pour une ancienne base où la région est obligatoire, le script
 [region-facultative](database/tp09-region-facultative.sql) permet d'adapter la table des départements.
 
+Pour une base existante, exécuter aussi [suivi-modifications.sql](database/suivi-modifications.sql)
+pour ajouter les colonnes de suivi des villes et départements.
+
 ## Utilisation
 
 - [Swagger UI](http://localhost:8080/swagger-ui.html) permet de consulter et d'essayer les routes.
@@ -83,3 +86,16 @@ le rôle USER : ses GET sont donc refusés. Une absence de connexion ou un mauva
 Dans HTTPie, les variables `username` et `password` servent aux GET, `adminUsername` et `adminPassword`
 aux autres méthodes. Elles sont renseignées dans **Defaults**. La collection **10 - Sécurité par rôles**
 contient les cas autorisés et les refus attendus.
+
+## Suivi des modifications
+
+Les villes et départements gardent `userMaj` et `dateMaj` après chaque ajout ou modification.
+Ces champs sont visibles dans les réponses JSON et remplis par le serveur avec le compte connecté.
+Ils restent vides pour les anciennes données qui n'ont pas encore été modifiées.
+
+Les services tracent les ajouts, modifications et suppressions dans `logs/projet-spring.log` avec
+l'utilisateur, l'identifiant et le nom de la donnée. L'actualisation automatique des départements
+est signée `initialisation` lorsqu'elle se fait au démarrage, sans compte connecté.
+
+La collection HTTPie **11 - Suivi des modifications** permet de vérifier les signatures. Ses champs
+`userMaj` et `dateMaj` envoyés dans le corps sont volontairement ignorés par le serveur.

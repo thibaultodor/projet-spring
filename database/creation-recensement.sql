@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS departement (
     code VARCHAR(3) NOT NULL UNIQUE,
     ID_REGION INT NULL,
     NOM VARCHAR(100),
+    user_maj VARCHAR(50) NULL,
+    date_maj DATETIME(6) NULL,
     CONSTRAINT fk_departement_region FOREIGN KEY (ID_REGION) REFERENCES region(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -23,6 +25,8 @@ CREATE TABLE IF NOT EXISTS ville (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
     population INT NOT NULL,
+    user_maj VARCHAR(50) NULL,
+    date_maj DATETIME(6) NULL,
     ID_DEPARTEMENT INT NOT NULL,
     CONSTRAINT fk_ville_departement FOREIGN KEY (ID_DEPARTEMENT) REFERENCES departement(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

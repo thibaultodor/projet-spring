@@ -1,11 +1,14 @@
 package fr.diginamic.projet_spring.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDateTime;
 
 /** Données échangées avec le client, sans exposer les relations JPA de Ville. */
 @Schema(description = "Ville sans relation imbriquée. Renseigner idDepartement ou codeDepartement ; un code inconnu crée le département.")
@@ -30,6 +33,15 @@ public class VilleDto {
     @Size(max = 3, message = "Le code du département doit contenir au plus 3 caractères")
     @Schema(description = "Code sur 2 ou 3 caractères ; peut remplacer idDepartement", example = "34")
     private String codeDepartement;
+
+    // Ces informations viennent du serveur. Le client ne peut pas les modifier.
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Dernier utilisateur ayant ajouté ou modifié la donnée", accessMode = Schema.AccessMode.READ_ONLY)
+    private String userMaj;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Date et heure de la dernière écriture", accessMode = Schema.AccessMode.READ_ONLY)
+    private LocalDateTime dateMaj;
 
     public VilleDto() {
     }
@@ -84,4 +96,8 @@ public class VilleDto {
         this.codeDepartement = codeDepartement;
     }
 
+    public String getUserMaj() { return userMaj; }
+    public void setUserMaj(String userMaj) { this.userMaj = userMaj; }
+    public LocalDateTime getDateMaj() { return dateMaj; }
+    public void setDateMaj(LocalDateTime dateMaj) { this.dateMaj = dateMaj; }
 }

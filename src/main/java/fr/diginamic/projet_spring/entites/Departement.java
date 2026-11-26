@@ -13,6 +13,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,13 @@ public class Departement {
     @Size(min = 2, max = 100, message = "Le nom du département doit contenir entre 2 et 100 caractères")
     @Column(name = "NOM", length = 100)
     private String nom;
+
+    // Garde le nom du dernier utilisateur et la date de son écriture.
+    @Column(name = "user_maj", length = 50)
+    private String userMaj;
+
+    @Column(name = "date_maj")
+    private LocalDateTime dateMaj;
 
     // Un département créé à partir de son seul code peut ne pas encore avoir de région.
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,4 +72,8 @@ public class Departement {
     public List<Ville> getVilles() { return villes; }
     public Region getRegion() { return region; }
     public void setRegion(Region region) { this.region = region; }
+    public String getUserMaj() { return userMaj; }
+    public void setUserMaj(String userMaj) { this.userMaj = userMaj; }
+    public LocalDateTime getDateMaj() { return dateMaj; }
+    public void setDateMaj(LocalDateTime dateMaj) { this.dateMaj = dateMaj; }
 }

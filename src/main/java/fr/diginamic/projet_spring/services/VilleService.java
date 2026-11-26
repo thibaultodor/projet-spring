@@ -11,6 +11,9 @@ import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.mappers.DtoMapper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +32,8 @@ import java.util.Set;
 @Service
 @Transactional(readOnly = true)
 public class VilleService implements IVilleService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VilleService.class);
 
     private final VilleRepository villeRepository;
     private final IDepartementService departementService;
@@ -203,7 +209,9 @@ public class VilleService implements IVilleService {
                 donnees.getIdDepartement(), donnees.getCodeDepartement());
         verifierNomDisponible(donnees.getNom(), departement.getId(), 0);
         Ville ville = new Ville(donnees.getNom(), donnees.getPopulation(), departement);
+        signerModification(ville);
         villeRepository.saveAndFlush(ville);
+        LOGGER.info("Ajout ville : utilisateur={}, id={}, nom={}", ville.getUserMaj(), ville.getId(), ville.getNom());
         return listerVillesApresModification();
     }
 
@@ -225,7 +233,10 @@ public class VilleService implements IVilleService {
         existante.setNom(donnees.getNom());
         existante.setPopulation(donnees.getPopulation());
         existante.setDepartement(departement);
+        signerModification(existante);
         villeRepository.saveAndFlush(existante);
+        LOGGER.info("Modification ville : utilisateur={}, id={}, nom={}",
+                existante.getUserMaj(), existante.getId(), existante.getNom());
         return listerVillesApresModification();
     }
 
@@ -238,9 +249,18 @@ public class VilleService implements IVilleService {
     @Transactional(rollbackFor = ExceptionMetier.class)
     @Override
     public List<VilleDto> supprimerVille(int idVille) throws ExceptionMetier {
-        villeRepository.delete(trouverEntite(idVille));
+        Ville ville = trouverEntite(idVille);
+        String utilisateur = SecurityContextHolder.getContext().getAuthentication().getName();
+        villeRepository.delete(ville);
         villeRepository.flush();
+        LOGGER.info("Suppression ville : utilisateur={}, id={}, nom={}", utilisateur, ville.getId(), ville.getNom());
         return listerVillesApresModification();
+    }
+
+    private void signerModification(Ville ville) {
+        // Le contexte de sécurité contient le compte connecté à la requête.
+        ville.setUserMaj(SecurityContextHolder.getContext().getAuthentication().getName());
+        ville.setDateMaj(LocalDateTime.now());
     }
 
     private List<VilleDto> listerVillesApresModification() {

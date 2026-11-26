@@ -17,11 +17,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -116,7 +119,10 @@ public class DepartementService implements IDepartementService {
         existant.setCode(donnees.getCode());
         existant.setNom(donnees.getNom());
         existant.setRegion(region);
+        signerModification(existant);
         departementRepository.saveAndFlush(existant);
+        LOGGER.info("Modification département : utilisateur={}, id={}, code={}, nom={}",
+                existant.getUserMaj(), existant.getId(), existant.getCode(), existant.getNom());
         return extractDepartements();
     }
 
@@ -134,8 +140,11 @@ public class DepartementService implements IDepartementService {
             throw new ExceptionMetier("Impossible de supprimer un département qui contient des villes",
                     HttpStatus.CONFLICT);
         }
+        String utilisateur = SecurityContextHolder.getContext().getAuthentication().getName();
         departementRepository.delete(departement);
         departementRepository.flush();
+        LOGGER.info("Suppression département : utilisateur={}, id={}, code={}, nom={}",
+                utilisateur, departement.getId(), departement.getCode(), departement.getNom());
         return extractDepartements();
     }
 
@@ -194,8 +203,18 @@ public class DepartementService implements IDepartementService {
             region = trouverRegion(donnees.getIdRegion());
         }
         Departement departement = new Departement(donnees.getCode(), donnees.getNom(), region);
+        signerModification(departement);
         departementRepository.saveAndFlush(departement);
+        LOGGER.info("Ajout département : utilisateur={}, id={}, code={}, nom={}",
+                departement.getUserMaj(), departement.getId(), departement.getCode(), departement.getNom());
         return departement;
+    }
+
+    private void signerModification(Departement departement) {
+        Authentication utilisateur = SecurityContextHolder.getContext().getAuthentication();
+        // Le chargement automatique au démarrage se fait sans utilisateur connecté.
+        departement.setUserMaj(utilisateur == null ? "initialisation" : utilisateur.getName());
+        departement.setDateMaj(LocalDateTime.now());
     }
 
     private Departement trouverEntite(int id) throws ExceptionMetier {
@@ -295,11 +314,16 @@ public class DepartementService implements IDepartementService {
             // Un code local inconnu de l'API est conservé. Seul le nom peut changer.
             if (nom != null && !nom.equals(departement.getNom())) {
                 departement.setNom(nom);
+                signerModification(departement);
                 modifies.add(departement);
             }
         }
         if (!modifies.isEmpty()) {
             departementRepository.saveAllAndFlush(modifies);
+            for (Departement departement : modifies) {
+                LOGGER.info("Modification département : utilisateur={}, id={}, code={}, nom={}",
+                        departement.getUserMaj(), departement.getId(), departement.getCode(), departement.getNom());
+            }
         }
         LOGGER.info("Initialisation des noms terminée : {} département(s) mis à jour.", modifies.size());
     }

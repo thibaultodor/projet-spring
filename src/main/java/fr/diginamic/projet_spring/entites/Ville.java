@@ -13,6 +13,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
+
 /** Ville persistée en base et rattachée à un département existant. */
 @Entity
 @Table(name = "ville")
@@ -31,6 +33,13 @@ public class Ville {
     @Min(value = 1, message = "La ville doit avoir au moins 1 habitant")
     @Column(nullable = false)
     private int population;
+
+    // Garde le nom du dernier utilisateur et la date de son écriture.
+    @Column(name = "user_maj", length = 50)
+    private String userMaj;
+
+    @Column(name = "date_maj")
+    private LocalDateTime dateMaj;
 
     // Cette relation reprend la clé étrangère ID_DEPARTEMENT de la table existante.
     @NotNull(message = "Le département de la ville est obligatoire")
@@ -56,4 +65,8 @@ public class Ville {
     public void setPopulation(int population) { this.population = population; }
     public Departement getDepartement() { return departement; }
     public void setDepartement(Departement departement) { this.departement = departement; }
+    public String getUserMaj() { return userMaj; }
+    public void setUserMaj(String userMaj) { this.userMaj = userMaj; }
+    public LocalDateTime getDateMaj() { return dateMaj; }
+    public void setDateMaj(LocalDateTime dateMaj) { this.dateMaj = dateMaj; }
 }

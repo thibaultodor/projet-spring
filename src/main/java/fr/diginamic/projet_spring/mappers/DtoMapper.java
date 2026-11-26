@@ -21,6 +21,8 @@ public class DtoMapper {
         dto.setId(ville.getId());
         dto.setNom(ville.getNom());
         dto.setPopulation(ville.getPopulation());
+        dto.setUserMaj(ville.getUserMaj());
+        dto.setDateMaj(ville.getDateMaj());
         dto.setIdDepartement(departement.getId());
         dto.setCodeDepartement(departement.getCode());
         return dto;
@@ -35,6 +37,8 @@ public class DtoMapper {
         DepartementDto dto = new DepartementDto();
         dto.setId(departement.getId());
         dto.setCode(departement.getCode());
+        dto.setUserMaj(departement.getUserMaj());
+        dto.setDateMaj(departement.getDateMaj());
         dto.setNom(departement.getNom());
         if (departement.getRegion() != null) {
             dto.setIdRegion(departement.getRegion().getId());

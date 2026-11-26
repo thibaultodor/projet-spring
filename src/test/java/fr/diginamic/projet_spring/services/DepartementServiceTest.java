@@ -17,11 +17,14 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +34,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@WithMockUser(username = "admin", roles = "ADMIN")
 class DepartementServiceTest {
 
     @Autowired
@@ -120,6 +124,9 @@ class DepartementServiceTest {
         assertEquals("34", capture.getValue().getCode());
         assertEquals("Hérault", capture.getValue().getNom());
         assertSame(region, capture.getValue().getRegion());
+        // Vérifie que le service a signé les données avec le compte connecté.
+        assertEquals("admin", capture.getValue().getUserMaj());
+        assertNotNull(capture.getValue().getDateMaj());
         assertEquals(1, resultat.size());
     }
 
@@ -154,6 +161,9 @@ class DepartementServiceTest {
 
     @Test
     void testModifierDepartementAvecNouvelleRegion() throws ExceptionMetier {
+        LocalDateTime ancienneDate = LocalDateTime.of(2000, 1, 1, 0, 0);
+        herault.setUserMaj("ancien");
+        herault.setDateMaj(ancienneDate);
         Region nouvelleRegion = new Region(20, "94", "Corse");
         when(departementRepository.findById(1)).thenReturn(Optional.of(herault));
         when(regionDao.extractRegion(20)).thenReturn(nouvelleRegion);
@@ -165,6 +175,8 @@ class DepartementServiceTest {
         assertEquals(1, resultat.getFirst().getId());
         assertEquals("Corse-du-Sud", resultat.getFirst().getNom());
         assertEquals(20, resultat.getFirst().getIdRegion());
+        assertEquals("admin", resultat.getFirst().getUserMaj());
+        assertTrue(resultat.getFirst().getDateMaj().isAfter(ancienneDate));
         verify(departementRepository).saveAndFlush(herault);
     }
 
@@ -244,6 +256,8 @@ class DepartementServiceTest {
         verify(departementRepository).saveAndFlush(resultat);
         assertEquals("Z9", resultat.getCode());
         assertEquals("Département Z9", resultat.getNom());
+        assertEquals("admin", resultat.getUserMaj());
+        assertNotNull(resultat.getDateMaj());
         assertNull(resultat.getRegion());
     }
 
@@ -280,6 +294,8 @@ class DepartementServiceTest {
 
     @Test
     void testInitDataMettreAJourLesNoms() throws ExceptionMetier {
+        // Le lancement automatique se fait sans requête HTTP ni compte connecté.
+        SecurityContextHolder.clearContext();
         herault.setNom("Ancien nom");
         Departement local = new Departement("Z9", "Département local", null);
         when(restTemplate.getForObject(anyString(), eq(DepartementApiDto[].class)))
@@ -292,6 +308,9 @@ class DepartementServiceTest {
         assertEquals("34", herault.getCode());
         assertSame(region, herault.getRegion());
         assertEquals("Département local", local.getNom());
+        assertEquals("initialisation", herault.getUserMaj());
+        assertNotNull(herault.getDateMaj());
+        assertNull(local.getDateMaj());
         verify(departementRepository).saveAllAndFlush(List.of(herault));
     }
 

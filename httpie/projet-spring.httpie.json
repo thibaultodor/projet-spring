@@ -14,24 +14,174 @@
     },
     "collections": [
       {
+        "name": "00 - Connexion JWT",
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "01 - Connexion USER - recopier la réponse dans tokenUser [200]",
+            "url": "{{baseUrl}}/login",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"username\": \"{{username}}\", \"password\": \"{{password}}\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "02 - Connexion ADMIN - recopier la réponse dans tokenAdmin [200]",
+            "url": "{{baseUrl}}/login",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"username\": \"{{adminUsername}}\", \"password\": \"{{adminPassword}}\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "03 - Refuser un mauvais mot de passe [401]",
+            "url": "{{baseUrl}}/login",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"username\": \"{{username}}\", \"password\": \"mot-de-passe-incorrect\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "04 - Refuser un compte inconnu [401]",
+            "url": "{{baseUrl}}/login",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": "application/json",
+                "enabled": true
+              }
+            ],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "none"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\"username\": \"compte-inconnu\", \"password\": \"mot-de-passe-incorrect\"}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      },
+      {
         "name": "01 — Villes DTO",
         "icon": {
           "name": "database",
           "color": "green"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Lister une page de villes — réponses dans content et totaux dans page [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -46,7 +196,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -71,11 +221,17 @@
             "name": "02 — Lister les départements pour choisir departementId [200]",
             "url": "{{baseUrl}}/departements",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -105,16 +261,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -139,7 +296,13 @@
             "name": "04 — Retrouver son id puis le copier dans villeId [200]",
             "url": "{{baseUrl}}/villes/recherche/nom",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "nom",
@@ -149,7 +312,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -174,11 +337,17 @@
             "name": "05 — Consulter la ville créée [200]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -208,16 +377,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -242,11 +412,17 @@
             "name": "07 — Vérifier la modification [200]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -276,16 +452,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -310,11 +487,17 @@
             "name": "09 — Refuser un identifiant de ville inconnu [404]",
             "url": "{{baseUrl}}/villes/2147483647",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -339,15 +522,17 @@
             "name": "10 — Supprimer uniquement la ville créée dans ce scénario [200]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -372,11 +557,17 @@
             "name": "11 — Vérifier sa disparition [404]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -406,16 +597,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -440,15 +632,17 @@
             "name": "13 — Refuser une suppression sur un id inconnu [404]",
             "url": "{{baseUrl}}/villes/2147483647",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -478,22 +672,24 @@
           "color": "green"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Lister les départements [200]",
             "url": "{{baseUrl}}/departements",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -518,11 +714,17 @@
             "name": "02 — Consulter le département choisi [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -547,11 +749,17 @@
             "name": "03 — Consulter ses villes [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -581,16 +789,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -615,11 +824,17 @@
             "name": "05 — Consulter le département créé [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -649,16 +864,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -688,16 +904,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -722,15 +939,17 @@
             "name": "08 — Supprimer uniquement le département créé dans ce scénario [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -755,11 +974,17 @@
             "name": "09 — Vérifier sa disparition [404]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -789,11 +1014,7 @@
           "color": "green"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
@@ -805,16 +1026,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -839,7 +1061,13 @@
             "name": "02 — Retrouver la ville — copier id dans villeAutoId et idDepartement dans departementAutoId [200]",
             "url": "{{baseUrl}}/villes/recherche/nom",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "nom",
@@ -849,7 +1077,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -874,11 +1102,17 @@
             "name": "03 — Consulter le département créé sans région [200]",
             "url": "{{baseUrl}}/departements/{{departementAutoId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -908,16 +1142,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -942,7 +1177,13 @@
             "name": "05 — Classer les villes du département créé [200]",
             "url": "{{baseUrl}}/departements/{{departementAutoId}}/villes/plus-grandes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "n",
@@ -952,7 +1193,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -977,15 +1218,17 @@
             "name": "06 — Refuser la suppression du département encore lié à la ville [409]",
             "url": "{{baseUrl}}/departements/{{departementAutoId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1010,15 +1253,17 @@
             "name": "07 — Supprimer uniquement la ville de ce scénario [200]",
             "url": "{{baseUrl}}/villes/{{villeAutoId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1043,15 +1288,17 @@
             "name": "08 — Supprimer ensuite le département de ce scénario [200]",
             "url": "{{baseUrl}}/departements/{{departementAutoId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1076,11 +1323,17 @@
             "name": "09 — Vérifier sa disparition [404]",
             "url": "{{baseUrl}}/departements/{{departementAutoId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1110,11 +1363,7 @@
           "color": "green"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
@@ -1126,16 +1375,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1165,16 +1415,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1204,16 +1455,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1243,16 +1495,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1282,16 +1535,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1321,16 +1575,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1360,16 +1615,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1399,16 +1655,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1438,16 +1695,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1477,16 +1735,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1516,16 +1775,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1555,16 +1815,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -1594,18 +1855,20 @@
           "color": "green"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Noms commençant par Montp [200]",
             "url": "{{baseUrl}}/villes/recherche/nom",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "nom",
@@ -1615,7 +1878,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1640,7 +1903,13 @@
             "name": "02 — Population strictement supérieure à 520000 [200]",
             "url": "{{baseUrl}}/villes/recherche/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1650,7 +1919,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1675,7 +1944,13 @@
             "name": "03 — Population strictement entre 300000 et 870000 [200]",
             "url": "{{baseUrl}}/villes/recherche/population/entre",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1690,7 +1965,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1715,7 +1990,13 @@
             "name": "04 — Préfixe sans résultat [404]",
             "url": "{{baseUrl}}/villes/recherche/nom",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "nom",
@@ -1725,7 +2006,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1750,7 +2031,13 @@
             "name": "05 — Aucune population au-dessus de 3000000 [404]",
             "url": "{{baseUrl}}/villes/recherche/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1760,7 +2047,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1785,7 +2072,13 @@
             "name": "06 — Intervalle sans résultat [404]",
             "url": "{{baseUrl}}/villes/recherche/population/entre",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1800,7 +2093,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1825,7 +2118,13 @@
             "name": "07 — Refuser des bornes inversées [400]",
             "url": "{{baseUrl}}/villes/recherche/population/entre",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1840,7 +2139,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1865,7 +2164,13 @@
             "name": "08 — Les cinq plus grandes villes du département choisi [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/plus-grandes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "n",
@@ -1875,7 +2180,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1900,7 +2205,13 @@
             "name": "09 — Les villes du département entre 20000 et 100000 habitants — bornes exclues [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1915,7 +2226,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1940,7 +2251,13 @@
             "name": "10 — Refuser un nombre de villes égal à zéro [400]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/plus-grandes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "n",
@@ -1950,7 +2267,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -1975,7 +2292,13 @@
             "name": "11 — Refuser les bornes inversées dans un département [400]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -1990,7 +2313,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2015,7 +2338,13 @@
             "name": "12 — Refuser un département inconnu pour le classement [404]",
             "url": "{{baseUrl}}/departements/2147483647/villes/plus-grandes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "n",
@@ -2025,7 +2354,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2050,7 +2379,13 @@
             "name": "13 — Refuser un département inconnu pour le filtre [404]",
             "url": "{{baseUrl}}/departements/2147483647/villes/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2065,7 +2400,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2095,18 +2430,20 @@
           "color": "blue"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Première page de 10 villes — content et page.totalElements [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -2121,7 +2458,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2146,7 +2483,13 @@
             "name": "02 — Deuxième page de 10 villes — page.number vaut 1 [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -2161,7 +2504,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2186,7 +2529,13 @@
             "name": "03 — Page au-delà des résultats — content vide [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -2201,7 +2550,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2226,7 +2575,13 @@
             "name": "04 — Refuser un numéro de page négatif [400]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -2241,7 +2596,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2266,7 +2621,13 @@
             "name": "05 — Refuser une taille de page nulle [400]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -2281,7 +2642,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2306,7 +2667,13 @@
             "name": "06 — Refuser une taille supérieure à 100 [400]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "page",
@@ -2321,7 +2688,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2346,7 +2713,13 @@
             "name": "07 — Population supérieure à 100000 — tri décroissant [200]",
             "url": "{{baseUrl}}/villes/recherche/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2356,7 +2729,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2381,7 +2754,13 @@
             "name": "08 — Population entre 100000 et 500000 — bornes exclues et tri décroissant [200]",
             "url": "{{baseUrl}}/villes/recherche/population/entre",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2396,7 +2775,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2421,7 +2800,13 @@
             "name": "09 — Département au-dessus de 20000 habitants — tri décroissant [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2431,7 +2816,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2456,7 +2841,13 @@
             "name": "10 — Département entre 20000 et 100000 — bornes exclues et tri décroissant [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2471,7 +2862,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2496,7 +2887,13 @@
             "name": "11 — Les trois plus grandes villes du département [200]",
             "url": "{{baseUrl}}/departements/{{departementId}}/villes/plus-grandes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "n",
@@ -2506,7 +2903,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2531,7 +2928,13 @@
             "name": "12 — Minimum dans un département inconnu [404]",
             "url": "{{baseUrl}}/departements/2147483647/villes/population",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2541,7 +2944,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2571,22 +2974,24 @@
           "color": "blue"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Consulter la description OpenAPI en JSON [200]",
             "url": "{{baseUrl}}/v3/api-docs",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2611,11 +3016,17 @@
             "name": "02 — Consulter la description OpenAPI en YAML [200]",
             "url": "{{baseUrl}}/v3/api-docs.yaml",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2645,18 +3056,20 @@
           "color": "green"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Télécharger les villes au-dessus de populationMin en CSV [200]",
             "url": "{{baseUrl}}/villes/export/csv",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2666,7 +3079,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2691,7 +3104,13 @@
             "name": "02 — CSV sans résultat — en-tête conservé [200]",
             "url": "{{baseUrl}}/villes/export/csv",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "min",
@@ -2701,7 +3120,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2726,11 +3145,17 @@
             "name": "03 — Minimum absent dans le CSV [400]",
             "url": "{{baseUrl}}/villes/export/csv",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2755,11 +3180,17 @@
             "name": "04 — Télécharger le rapport illustré du département par son CODE [200]",
             "url": "{{baseUrl}}/departements/{{codeDepartement}}/export/pdf",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2784,11 +3215,17 @@
             "name": "05 — Télécharger le rapport illustré de Corse-du-Sud, code 2A [200]",
             "url": "{{baseUrl}}/departements/2A/export/pdf",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2813,11 +3250,17 @@
             "name": "06 — Département inconnu pour le PDF [404]",
             "url": "{{baseUrl}}/departements/ZZ/export/pdf",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2847,22 +3290,24 @@
           "color": "blue"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
             "name": "01 — Découvrir les endpoints Actuator exposés [200]",
             "url": "{{baseUrl}}/actuator",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2887,11 +3332,17 @@
             "name": "02 — Vérifier la santé de l’application et de la base — status UP [200]",
             "url": "{{baseUrl}}/actuator/health",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2916,11 +3367,17 @@
             "name": "03 — Lire le nom, la description et la version du projet [200]",
             "url": "{{baseUrl}}/actuator/info",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2945,11 +3402,17 @@
             "name": "04 — Lister les mesures disponibles [200]",
             "url": "{{baseUrl}}/actuator/metrics",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -2974,11 +3437,17 @@
             "name": "05 — Consulter la mémoire utilisée par Java [200]",
             "url": "{{baseUrl}}/actuator/metrics/jvm.memory.used",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3003,11 +3472,17 @@
             "name": "06 — Consulter le nombre de threads Java [200]",
             "url": "{{baseUrl}}/actuator/metrics/jvm.threads.live",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3032,11 +3507,17 @@
             "name": "07 — Mesure inconnue [404]",
             "url": "{{baseUrl}}/actuator/metrics/mesure.inconnue",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3061,11 +3542,17 @@
             "name": "08 — Vérifier qu’un endpoint non exposé est inaccessible [404]",
             "url": "{{baseUrl}}/actuator/env",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3131,15 +3618,17 @@
             "name": "02 - Lire les villes avec USER [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{username}}",
-                "password": "{{password}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3164,15 +3653,17 @@
             "name": "03 - Lire les villes avec ADMIN [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3202,16 +3693,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{username}}",
-                "password": "{{password}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3241,16 +3733,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{username}}",
-                "password": "{{password}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3275,15 +3768,17 @@
             "name": "06 - Refuser une suppression avec USER [403]",
             "url": "{{baseUrl}}/villes/2147483647",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{username}}",
-                "password": "{{password}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3313,16 +3808,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3352,16 +3848,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3386,15 +3883,17 @@
             "name": "09 - Atteindre la suppression avec ADMIN sur un id inconnu [404]",
             "url": "{{baseUrl}}/villes/2147483647",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3416,18 +3915,20 @@
             }
           },
           {
-            "name": "10 - Refuser un mauvais mot de passe [401]",
+            "name": "10 - Refuser un JWT invalide [401]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer FAKE_TOKEN",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{username}}",
-                "password": "mot-de-passe-incorrect"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3457,11 +3958,7 @@
           "color": "blue"
         },
         "auth": {
-          "type": "basic",
-          "credentials": {
-            "username": "{{username}}",
-            "password": "{{password}}"
-          }
+          "type": "none"
         },
         "requests": [
           {
@@ -3473,16 +3970,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3507,11 +4005,17 @@
             "name": "02 - Lire userMaj et dateMaj du département [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3541,16 +4045,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3575,11 +4080,17 @@
             "name": "04 - Vérifier la nouvelle signature du département [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3609,16 +4120,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3643,7 +4155,13 @@
             "name": "06 - Retrouver la ville et copier son id dans villeId [200]",
             "url": "{{baseUrl}}/villes/recherche/nom",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [
               {
                 "name": "nom",
@@ -3653,7 +4171,7 @@
             ],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3683,16 +4201,17 @@
                 "name": "Content-Type",
                 "value": "application/json",
                 "enabled": true
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
               }
             ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "text",
@@ -3717,11 +4236,17 @@
             "name": "08 - Vérifier userMaj et dateMaj de la ville [200]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3746,15 +4271,17 @@
             "name": "09 - Supprimer la ville et consulter la trace dans le fichier de logs [200]",
             "url": "{{baseUrl}}/villes/{{villeId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3779,15 +4306,17 @@
             "name": "10 - Supprimer le département et consulter sa trace dans les logs [200]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "DELETE",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenAdmin}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "basic",
-              "credentials": {
-                "username": "{{adminUsername}}",
-                "password": "{{adminPassword}}"
-              }
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3812,11 +4341,17 @@
             "name": "11 - Vérifier la disparition du département [404]",
             "url": "{{baseUrl}}/departements/{{departementTestId}}",
             "method": "GET",
-            "headers": [],
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Bearer {{tokenUser}}",
+                "enabled": true
+              }
+            ],
             "queryParams": [],
             "pathParams": [],
             "auth": {
-              "type": "inherited"
+              "type": "none"
             },
             "body": {
               "type": "none",
@@ -3925,6 +4460,16 @@
           {
             "name": "adminPassword",
             "value": "admin1234",
+            "isSecret": true
+          },
+          {
+            "name": "tokenUser",
+            "value": "",
+            "isSecret": true
+          },
+          {
+            "name": "tokenAdmin",
+            "value": "",
             "isSecret": true
           }
         ]

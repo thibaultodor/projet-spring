@@ -1,14 +1,18 @@
 package fr.diginamic.projet_spring.config;
 
+import fr.diginamic.projet_spring.securite.JwtAuthenticationFilter;
 import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -42,12 +46,15 @@ public class SecurityConfig {
 
     /** Construit les règles appliquées avant l'appel des contrôleurs. */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // HTTP Basic lit l'identifiant et le mot de passe envoyés avec la requête.
-        http.httpBasic(Customizer.withDefaults());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter)
+            throws Exception {
         http.cors(Customizer.withDefaults());
-        // L'API est appelée sans cookie depuis HTTPie.
+        // Le JWT accompagne chaque requête. Le serveur ne garde pas de session de connexion.
         http.csrf(csrf -> csrf.disable());
+        http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // Sans authentification valide, l'API répond 401.
+        http.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, exception) ->
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
         // Le navigateur limite les ressources aux origines déclarées dans cet en-tête.
         String csp = "script-src 'self' https://cdn.jsdelivr.net;"
                 + "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;"
@@ -59,8 +66,11 @@ public class SecurityConfig {
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                 // Le navigateur vérifie CORS avant d'envoyer la requête authentifiée.
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/login").permitAll()
                 // Les contrôleurs précisent ensuite les rôles avec @Secured.
                 .anyRequest().authenticated());
+        // Vérifie le JWT avant les contrôles d'accès de Spring Security.
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

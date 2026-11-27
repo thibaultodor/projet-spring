@@ -26,6 +26,25 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- JJWT crée et vérifie les tokens signés. -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.6</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- Actuator fournit les endpoints de santé, d'information et de mesures. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -79,7 +98,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Ajoute les utilisateurs simulés et HTTP Basic aux tests MockMvc. -->
+		<!-- Ajoute les utilisateurs simulés aux tests MockMvc. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security-test</artifactId>

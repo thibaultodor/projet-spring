@@ -27,6 +27,12 @@ public class SecurityConfig {
         http.httpBasic(Customizer.withDefaults());
         // L'API est appelée sans cookie depuis HTTPie.
         http.csrf(csrf -> csrf.disable());
+        // Le navigateur limite les ressources aux origines déclarées dans cet en-tête.
+        String csp = "script-src 'self' https://cdn.jsdelivr.net;"
+                + "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;"
+                + "img-src 'self';"
+                + "font-src 'self' https://cdnjs.cloudflare.com";
+        http.headers(headers -> headers.contentSecurityPolicy(configCsp -> configCsp.policyDirectives(csp)));
         http.authorizeHttpRequests(auth -> auth
                 // Laisse Spring produire les réponses d'erreur après le contrôle initial.
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()

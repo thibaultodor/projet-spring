@@ -8,6 +8,7 @@ import fr.diginamic.projet_spring.services.interfaces.IDepartementService;
 import fr.diginamic.projet_spring.services.interfaces.IExportService;
 import fr.diginamic.projet_spring.services.interfaces.IVilleService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,12 +44,14 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping
     public List<DepartementDto> getDepartements() {
         return departementService.extractDepartements();
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
     public DepartementDto getDepartement(
             @PathVariable int id) throws ExceptionMetier {
@@ -56,6 +59,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}/villes")
     public List<VilleDto> getVillesDuDepartement(
             @PathVariable int id) throws ExceptionMetier {
@@ -63,6 +67,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     @PostMapping
     public List<DepartementDto> ajouterDepartement(@Valid @RequestBody DepartementDto departement)
             throws ExceptionMetier {
@@ -70,6 +75,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public List<DepartementDto> modifierDepartement(
             @PathVariable int id, @Valid @RequestBody DepartementDto departement)
@@ -78,6 +84,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public List<DepartementDto> supprimerDepartement(
             @PathVariable int id) throws ExceptionMetier {
@@ -85,6 +92,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}/villes/plus-grandes")
     public List<VilleDto> getPlusGrandesVilles(
             @PathVariable int id,
@@ -94,6 +102,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping(value = "/{id}/villes/population", params = "!max")
     public List<VilleDto> getVillesParPopulationMin(
             @PathVariable int id,
@@ -103,6 +112,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping(value = "/{id}/villes/population", params = "max")
     public List<VilleDto> getVillesParPopulation(
             @PathVariable int id,
@@ -113,6 +123,7 @@ public class DepartementControleur implements IDepartementControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping(value = "/{code}/export/pdf", produces = "application/pdf")
     public ResponseEntity<byte[]> exporterPdf(
             @PathVariable String code) throws ExceptionMetier {

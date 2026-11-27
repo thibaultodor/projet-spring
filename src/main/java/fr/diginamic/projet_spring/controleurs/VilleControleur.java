@@ -6,6 +6,7 @@ import fr.diginamic.projet_spring.exceptions.ExceptionMetier;
 import fr.diginamic.projet_spring.services.interfaces.IVilleService;
 import fr.diginamic.projet_spring.services.interfaces.IExportService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,6 +40,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping
     public PagedModel<VilleDto> getVilles(
             @RequestParam(defaultValue = "0") int page,
@@ -48,6 +50,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
     public VilleDto getVille(
             @PathVariable int id) throws ExceptionMetier {
@@ -55,12 +58,14 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     @PostMapping
     public List<VilleDto> ajouterVille(@Valid @RequestBody VilleDto ville) throws ExceptionMetier {
         return villeService.insertVille(ville);
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public List<VilleDto> modifierVille(
             @PathVariable int id, @Valid @RequestBody VilleDto nouvellesDonnees)
@@ -69,6 +74,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public List<VilleDto> supprimerVille(
             @PathVariable int id) throws ExceptionMetier {
@@ -76,6 +82,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/recherche/nom")
     public List<VilleDto> rechercherParNom(
             @RequestParam String nom) throws ExceptionMetier {
@@ -83,6 +90,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/recherche/population")
     public List<VilleDto> rechercherParPopulationMin(
             @RequestParam int min) throws ExceptionMetier {
@@ -90,6 +98,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/recherche/population/entre")
     public List<VilleDto> rechercherParPopulationEntre(
             @RequestParam int min,
@@ -99,6 +108,7 @@ public class VilleControleur implements IVilleControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping(value = "/export/csv", produces = "text/csv")
     public ResponseEntity<byte[]> exporterCsv(
             @RequestParam int min) {

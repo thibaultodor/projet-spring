@@ -3,14 +3,15 @@ package fr.diginamic.projet_spring.config;
 import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /** Définit les droits d'accès aux routes. */
 @Configuration
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     /** Fournit le hachage utilisé pour vérifier les mots de passe. */
@@ -29,9 +30,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 // Laisse Spring produire les réponses d'erreur après le contrôle initial.
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                // hasRole ajoute le préfixe ROLE_ au nom du rôle.
-                .requestMatchers(HttpMethod.GET, "/**").hasRole("USER")
-                .anyRequest().hasRole("ADMIN"));
+                // Les contrôleurs précisent ensuite les rôles avec @Secured.
+                .anyRequest().authenticated());
         return http.build();
     }
 }

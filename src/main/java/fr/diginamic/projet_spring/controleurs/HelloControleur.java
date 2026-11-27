@@ -2,6 +2,7 @@ package fr.diginamic.projet_spring.controleurs;
 
 import fr.diginamic.projet_spring.controleurs.interfaces.IHelloControleur;
 import fr.diginamic.projet_spring.services.interfaces.IHelloService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ public class HelloControleur implements IHelloControleur {
     }
 
     @Override
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping
     public String direHello() {
         return helloService.salutations();

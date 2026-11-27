@@ -3161,7 +3161,7 @@
             }
           },
           {
-            "name": "03 - Refuser la lecture avec ADMIN [403]",
+            "name": "03 - Lire les villes avec ADMIN [200]",
             "url": "{{baseUrl}}/villes",
             "method": "GET",
             "headers": [],
@@ -3219,7 +3219,7 @@
                 "name": ""
               },
               "text": {
-                "value": "{}",
+                "value": "{\"nom\": \"Ville de contrôle\", \"population\": 1000, \"idDepartement\": \"{{departementId}}\"}",
                 "format": "application/json"
               },
               "form": {

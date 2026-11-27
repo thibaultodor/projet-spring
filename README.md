@@ -77,11 +77,12 @@ Les comptes et les rôles sont enregistrés en base, dans `utilisateur`, `role` 
 | Compte | Mot de passe | Rôle | Accès |
 | --- | --- | --- | --- |
 | `user` | `user1234` | `USER` | GET |
-| `admin` | `admin1234` | `ADMIN` | POST, PUT, DELETE et autres méthodes |
+| `admin` | `admin1234` | `ADMIN` | GET, POST, PUT et DELETE |
 
-Le script `database/utilisateurs.sql` crée ces deux comptes et peut être relancé sans doublon. Le compte admin n'a pas
-le rôle USER : ses GET sont donc refusés. Une absence de connexion ou un mauvais mot de passe renvoie
-401 ; un rôle insuffisant renvoie 403.
+Le script `database/utilisateurs.sql` crée ces deux comptes et peut être relancé sans doublon.
+Toutes les routes demandent une connexion. Les contrôleurs utilisent `@Secured` : USER ou ADMIN
+pour les GET, ADMIN pour les POST, PUT et DELETE. Une absence de connexion ou un mauvais mot de passe
+renvoie 401 ; un rôle insuffisant renvoie 403.
 
 Dans HTTPie, les variables `username` et `password` servent aux GET, `adminUsername` et `adminPassword`
 aux autres méthodes. Elles sont renseignées dans **Defaults**. La collection **10 - Sécurité par rôles**

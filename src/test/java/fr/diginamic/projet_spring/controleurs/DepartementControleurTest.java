@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@WithMockUser(roles = {"USER", "ADMIN"})
+@WithMockUser(roles = "ADMIN")
 class DepartementControleurTest {
 
     private static final String JSON_AVEC_REGION = """
@@ -74,6 +74,7 @@ class DepartementControleurTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void testGetDepartements() throws Exception {
         when(departementService.extractDepartements()).thenReturn(List.of(herault, corse));
 
